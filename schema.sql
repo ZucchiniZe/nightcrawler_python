@@ -16,6 +16,7 @@ create table issues (
        id integer primary key,
        title text not null,
        link text not null,
+       num integer,
        series integer not null,
        foreign key(series) references titles(id)
 );
