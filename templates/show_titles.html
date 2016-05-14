@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if titles|length == 0 %}
+  <h2>There are no titles, click <a href="/refresh/titles">here</a> to refresh them</h2>
+{% else %}
+  <ul class="titles">
+  {% for title in titles %}
+    <li>
+      <h2><span class="scraped">{{ title.scraped|scraped }}</span> <a href="/title/{{ title.id }}">{{ title.title }}</a></h2>
+      {{ title.startyear }}{% if title.endyear %} - {{ title.endyear }}{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Search {{ totals[0] }} comics and {{ totals[1] }} issues</h2>
+<form>
+  Search: <input name="q" type="text"/>
+  <input type="submit" value="Search"/>
+</form>
+{% if results|length > 0 %}
+<p>found {{ results|length }} entr{{ results|length|pluralize('y', 'ies') }}</p>
+<ul>
+  {% for result in results %}
+  <li><span class="scraped">{{ result.scraped|scraped }}</span><a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end %} - {{ result.end }}{% endif %})</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>{{ title.title }}
+({{ title.startyear }}{% if title.endyear %} - {{ title.endyear }}{% endif %})
+</h2>
+
+<a href="/refresh/issues/{{title.id}}">refresh</a>
+<hr/>
+{% if issues|length == 0 %}
+  <h3>Please click the refresh button above to scrape the marvel.com website</h3>
+{% else %}
+  <ul>
+  {% for issue in issues %}
+    <li><a href="{{ issue.link }}">{{ issue.title }}</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}
