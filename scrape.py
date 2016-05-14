@@ -1,17 +1,9 @@
 from lxml import html
-from slugify import slugify
 from parse import parse
 import requests
 
 def get_url(data):
-    (titles, run, id) = data
-    if type(run) is tuple:
-        slug = slugify("{} {} - {}".format(titles, run[0], run[1]), seperator="_", to_Lower=True)
-    else:
-        slug = slugify("{} {} - {}".format(titles, run), seperator="_", to_Lower=True)
-
-    url = "http://marvel.com/comics/series/{id}/{slug}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000".format(id=id, slug=slug)
-
+    url = "http://marvel.com/comics/series/{id}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000".format(id=data['id'], title=data['title'])
     return url
 
 def scrape_issues(data):
@@ -26,17 +18,20 @@ def scrape_issues(data):
     nums = []
     for title in titles:
         if '#' in title:
-            nums.append(int(parse("{} #{}", title)[-1]))
+            nums.append(float(parse("{} #{}", title)[-1]))
         else:
             nums.append(None)
     # nums = list(map(lambda s: int(parse("{} #{}", s)[-1]), titles))
 
-    both = list(zip(titles, links, ids, nums))
 
-    return both
+    both = list(zip(titles, links, ids, nums))
+    dicts = [{'title': cur[0], 'link': cur[1], 'id': cur[2], 'num': cur[3]} for cur in both]
+
+    return dicts
 
 # scrape_issues(("Amazing Spider-Man", (1963, 1998), 1987), count=10)
 # print(scrape_issues(("Ant-Man", ('2015', 'present'), 16451)))
+# print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
 
 def parse_title(name):
     years = name.rsplit('(', 1)[1][:-1]
@@ -53,11 +48,11 @@ def parse_title(name):
         title = parsed[0]
         year1 = parsed[1]
         year2 = parsed[2]
-        data = (title, (year1, year2))
+        data = (title, (year1, (0 if year2 == 'Present' else year2)))
     elif len(parsed) >= 2:
         title = parsed[0]
         year = parsed[1]
-        data = (title, year)
+        data = (title, (year, -1))
     return data
 
 # parse_title("X-Men Origins: Wolverine (2013 - 2015)")
@@ -81,6 +76,8 @@ def scrape_titles():
 
     both = [(a, b, c) for (a, b), c in zip(titles, ids)]
 
-    return both
+    dicts = [{'title': cur[0], 'start': cur[1][0], 'end': cur[1][1], 'id': cur[2], 'scraped': False} for cur in both]
 
-# scrape_titles()
+    return dicts
+
+# print(scrape_titles())

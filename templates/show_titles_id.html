@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <h2>{{ title.title }}
-({{ title.startyear }}{% if title.endyear %} - {{ title.endyear }}{% endif %})
+({{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %})
 </h2>
 
 <a href="/refresh/issues/{{title.id}}">refresh</a>

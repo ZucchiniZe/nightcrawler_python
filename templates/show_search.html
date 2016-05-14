@@ -5,12 +5,16 @@
   Search: <input name="q" type="text"/>
   <input type="submit" value="Search"/>
 </form>
-{% if results|length > 0 %}
+{% if results %}
 <p>found {{ results|length }} entr{{ results|length|pluralize('y', 'ies') }}</p>
 <ul>
   {% for result in results %}
-  <li><span class="scraped">{{ result.scraped|scraped }}</span><a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end %} - {{ result.end }}{% endif %})</a></li>
+  <li><span class="scraped">{{ result.scraped|scraped }}</span><a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end != -1 %} - {{ result.end|parseyear }}{% endif %})</a></li>
   {% endfor %}
 </ul>
+{% endif %}
+{% if results|length == 0 %}
+<p>found 0 entries. try searching something else.</p>
+<p>note: some superheros have dashes in their names like ant-man and spider-man.</p>
 {% endif %}
 {% endblock %}
