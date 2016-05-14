@@ -23,8 +23,15 @@ def scrape_issues(data):
     titles = [x.strip() for x in tree.xpath('//div[@class="row-item comic-item"]/div[@class="row-item-text"]/h5/a[@class="meta-title"]/text()')]
     links = tree.xpath('//div[@class="row-item comic-item"]/div[@class="row-item-text"]/a[@class="see-inside"]/@href')
     ids = list(map(lambda s: int(s.split('/')[-1]), links))
+    nums = []
+    for title in titles:
+        if '#' in title:
+            nums.append(int(parse("{} #{}", title)[-1]))
+        else:
+            nums.append(None)
+    # nums = list(map(lambda s: int(parse("{} #{}", s)[-1]), titles))
 
-    both = list(zip(titles, links, ids))
+    both = list(zip(titles, links, ids, nums))
 
     return both
 

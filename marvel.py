@@ -86,7 +86,7 @@ def show_search():
 def title_by_id(title_id):
     tcur = g.db.execute('select title, startyear, endyear from titles where id = ?', [title_id]).fetchall()[0]
     title = dict(title=tcur[0], id=title_id, startyear=tcur[1], endyear=tcur[2])
-    icur = g.db.execute('select title, id, link from issues where series = ?', [title_id])
+    icur = g.db.execute('select title, id, link from issues where series = ? order by num asc', [title_id])
     issues = [dict(title=row[0], id=row[1], link=row[2]) for row in icur.fetchall()]
     return render_template('show_titles_id.html', title=title, issues=issues)
 
@@ -115,8 +115,8 @@ def refresh_issues(title_id):
     data = coerce_to_data(title)
     issues = scrape_issues(data)
     for issue in issues:
-        g.db.execute('insert into issues (title, id, link, series) values (?, ?, ?, ?)',
-                     [issue[0], issue[2], issue[1], title[1]])
+        g.db.execute('insert into issues (title, id, link, series, num) values (?, ?, ?, ?, ?)',
+                     [issue[0], issue[2], issue[1], title[1], issue[3]])
     g.db.execute('update titles set scraped = 1 where id = ?', [title_id])
     g.db.execute('update titlesearch set scraped = 1 where id = ?', [title_id])
     g.db.commit()
