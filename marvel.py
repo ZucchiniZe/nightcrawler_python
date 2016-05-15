@@ -83,6 +83,7 @@ def show_search():
             query = (Comic
                      .select()
                      .where(Comic.search_title.match(search))
+                     .order_by(Comic.scraped.desc(), Comic.title)
                      .dicts())
             elapsed = process_time() - start
         else:
@@ -90,6 +91,7 @@ def show_search():
             query = (Comic
                      .select()
                      .where(Expression(Comic.search_title, 'T@@', fn.plainto_tsquery(search)))
+                     .order_by(Comic.scraped.desc(), Comic.title)
                      .dicts())
             elapsed = process_time() - start
         return render_template('show_search.html',
