@@ -21,7 +21,6 @@ def scrape_issues(data):
             nums.append(float(parse("{} #{}", title)[-1]))
         else:
             nums.append(None)
-    # nums = list(map(lambda s: int(parse("{} #{}", s)[-1]), titles))
 
 
     both = list(zip(titles, links, ids, nums))
@@ -56,8 +55,6 @@ def parse_title(name):
 # parse_title("X-Men Origins: Wolverine (2013 - 2015)")
 # parse_title("Deadpool (2010)")
 # parse_title("Avengers (2012 - Present)")
-# parse_title("Ms. Marvel (2006 - 2010)")
-# parse_title("Halo: Fall of Reach - Invasion (2010 - 2012)")
 
 def scrape_titles():
 
