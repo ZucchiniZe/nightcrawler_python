@@ -50,6 +50,10 @@ ul.nav li a:visited {
   color: blue;
 }
 
+ul.nav li.active {
+  text-decoration: underline;
+}
+
 h2 {
   font-size: 1.2em;
 }

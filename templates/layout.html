@@ -12,9 +12,9 @@
         Nightcrawler
       </a></h1>
       <ul class="nav">
-        <li><a href="/titles">titles</a></li>
-        <li><a href="/synced">synced</a></li>
-        <li><a href="/search">search</a></li>
+        <li{% if request.path == "/titles" %} class="active"{% endif %}><a href="/titles">titles</a></li>
+        <li{% if request.path == "/synced" %} class="active"{% endif %}><a href="/synced">synced</a></li>
+        <li{% if request.path == "/search" %} class="active"{% endif %}><a href="/search">search</a></li>
       </ul>
     </div>
     {% block body %}{% endblock %}
