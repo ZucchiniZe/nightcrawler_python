@@ -2,7 +2,7 @@
 {% block body %}
 <h2>Search {{ totals[0] }} comics and {{ totals[1] }} issues</h2>
 <form>
-  Advanced Search: <input name="adv" type="radio" {% if adv == "on" %}checked{%  endif %}/>
+  Advanced Search: <input name="adv" type="checkbox" value="on" {% if adv == "on" %}checked{%  endif %}/>
   <br/>
   Search: <input name="q" type="text" autofocus value="{{query}}"/>
   <input type="submit" value="Search"/>
