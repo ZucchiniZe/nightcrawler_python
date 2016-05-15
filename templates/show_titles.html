@@ -10,7 +10,7 @@
   <ul class="titles">
   {% for title in titles %}
     <li>
-      <h2><span class="scraped">{{ title.scraped|scraped }}</span> <a href="/title/{{ title.id }}">{{ title.title }}</a></h2>
+      <h2><span class="scraped{% if title.scraped %} yes{% else %} no{% endif %}">{{ title.scraped|scraped }}</span> <a href="/title/{{ title.id }}">{{ title.title }}</a></h2>
       {{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %}
     </li>
   {% endfor %}

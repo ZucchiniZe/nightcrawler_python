@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 
 # ALL THE IMPORTS!
-import sqlite3
 from flask import Flask, request, g, redirect, url_for, render_template
 from time import process_time
 from playhouse.shortcuts import model_to_dict
-from playhouse.postgres_ext import Match
-from contextlib import closing
 from scrape import *
 from db import *
 
 app = Flask(__name__)
-
-
 
 def init_db():
     db.connect()
@@ -21,14 +16,12 @@ def init_db():
 
 app.jinja_env.globals.update(get_url=get_url)
 
-
 @app.template_filter('scraped')
-def bool_filter(i):
-    scraped = bool(i)
+def bool_filter(scraped):
     if scraped:
-        return "✓"
+        return u"✓"
     else:
-        return "✗"
+        return u"✗"
 
 @app.template_filter('pluralize')
 def pluralize(number, singular='', plural='s'):
@@ -39,7 +32,6 @@ def pluralize(number, singular='', plural='s'):
 def parse_year(year):
     if year == 0: return 'Present'
     return year
-
 
 @app.before_request
 def before_request():

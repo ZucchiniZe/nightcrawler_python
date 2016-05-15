@@ -10,7 +10,7 @@
 <p>found {{ results|length }} entr{{ results|length|pluralize('y', 'ies') }} in {{ elapsed }} milliseconds</p>
 <ul>
   {% for result in results %}
-  <li><span class="scraped">{{ result.scraped|scraped }}</span><a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end != -1 %} - {{ result.end|parseyear }}{% endif %})</a></li>
+  <li><span class="scraped{% if result.scraped %} yes{% else %} no{% endif %}">{{ result.scraped|scraped }}</span><a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end != -1 %} - {{ result.end|parseyear }}{% endif %})</a></li>
   {% endfor %}
 </ul>
 {% endif %}

@@ -85,8 +85,12 @@ h2 {
   margin-bottom: 0;
 }
 
-.scraped {
-  color: black;
+.scraped.yes {
+  color: green;
+}
+
+.scraped.no {
+  color: red;
 }
 
 .info {
