@@ -87,7 +87,7 @@ def show_search():
                      .select()
                      .where(Expression(Comic.search_title, 'T@@', fn.plainto_tsquery(search)))
                      .dicts())
-        return render_template('show_search.html', totals=(tcount, icount), results=query, search=True)
+        return render_template('show_search.html', totals=(tcount, icount), results=query, search=True, query=search, adv=advanced)
 
     return render_template('show_search.html', totals=(tcount, icount))
 
