@@ -5,7 +5,7 @@
     ({{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %})
   </h2>
 
-  <a href="/refresh/issues/{{title.id}}">refresh</a>
+  <a href="/refresh/issues/{{title.id}}">refresh</a> |
   <a href="{{ get_url({'title': title.title, 'id': title.id}) }}">{{ title.title }} on marvel.com</a>
 </div>
 {% if issues|length == 0 %}
