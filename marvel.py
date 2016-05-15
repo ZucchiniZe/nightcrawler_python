@@ -3,11 +3,12 @@
 # ALL THE IMPORTS!
 import sqlite3
 from flask import Flask, request, g, redirect, url_for, render_template
-from scrape import *
-from db import *
+from time import process_time
 from playhouse.shortcuts import model_to_dict
 from playhouse.postgres_ext import Match
 from contextlib import closing
+from scrape import *
+from db import *
 
 app = Flask(__name__)
 
@@ -78,16 +79,26 @@ def show_search():
         search = request.args.get('q')
         advanced = request.args.get('adv')
         if advanced == 'on':
+            start = process_time()
             query = (Comic
                      .select()
                      .where(Comic.search_title.match(search))
                      .dicts())
+            elapsed = process_time() - start
         else:
+            start = process_time()
             query = (Comic
                      .select()
                      .where(Expression(Comic.search_title, 'T@@', fn.plainto_tsquery(search)))
                      .dicts())
-        return render_template('show_search.html', totals=(tcount, icount), results=query, search=True, query=search, adv=advanced)
+            elapsed = process_time() - start
+        return render_template('show_search.html',
+                               totals=(tcount, icount),
+                               results=query,
+                               search=True,
+                               query=search,
+                               adv=advanced,
+                               elapsed=round(elapsed*1000, 4))
 
     return render_template('show_search.html', totals=(tcount, icount))
 
