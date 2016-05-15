@@ -1,18 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
-<h2>{{ title.title }}
-({{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %})
-</h2>
+<div class="info">
+  <h2>{{ title.title }}
+    ({{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %})
+  </h2>
 
-<a href="/refresh/issues/{{title.id}}">refresh</a>
-<hr/>
+  <a href="/refresh/issues/{{title.id}}">refresh</a>
+  <a href="{{ get_url({'title': title.title, 'id': title.id}) }}">{{ title.title }} on marvel.com</a>
+</div>
 {% if issues|length == 0 %}
-  <h3>Please click the refresh button above to scrape the marvel.com website</h3>
+<h3>Please click the refresh button above to scrape the marvel.com website</h3>
 {% else %}
-  <ul>
+<ul>
   {% for issue in issues %}
-    <li><a href="{{ issue.link }}">{{ issue.title }}</a></li>
+  <li><a href="{{ issue.link }}">{{ issue.title }}</a></li>
   {% endfor %}
-  </ul>
+</ul>
 {% endif %}
 {% endblock %}

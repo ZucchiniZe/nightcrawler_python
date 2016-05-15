@@ -86,3 +86,11 @@ h2 {
 .scraped {
   color: black;
 }
+
+.info {
+  border-bottom: 1px solid #607d8b;
+}
+
+.info a {
+  text-decoration: none;
+}

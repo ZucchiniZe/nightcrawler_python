@@ -1,7 +1,9 @@
+import os
 from peewee import *
-from playhouse.sqlite_ext import *
+from playhouse.db_url import connect
+from playhouse.postgres_ext import *
 
-db = SqliteExtDatabase('marvel.db', threadlocals=True)
+db = connect(os.environ.get('DATABASE') or 'postgresext://postgres:mysecretpassword@localhost:5432/marvel')
 
 class Comic(Model):
     id = PrimaryKeyField()
@@ -9,9 +11,11 @@ class Comic(Model):
     start = IntegerField()
     end = IntegerField(null=True)
     scraped = BooleanField(default=False)
+    search_title = TSVectorField()
 
     class Meta:
         database = db
+
 
 class Issue(Model):
     id = PrimaryKeyField()
@@ -19,13 +23,6 @@ class Issue(Model):
     link = CharField()
     num = FloatField(null=True)
     series = ForeignKeyField(Comic)
-
-    class Meta:
-        database = db
-
-class ComicSearch(FTSModel):
-    comic_id = IntegerField()
-    title = TextField()
 
     class Meta:
         database = db

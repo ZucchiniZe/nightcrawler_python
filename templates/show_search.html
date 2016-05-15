@@ -2,7 +2,9 @@
 {% block body %}
 <h2>Search {{ totals[0] }} comics and {{ totals[1] }} issues</h2>
 <form>
-  Search: <input name="q" type="text"/>
+  Advanced Search: <input name="adv" type="radio"/>
+  <br/>
+  Search: <input name="q" type="text" autofocus/>
   <input type="submit" value="Search"/>
 </form>
 {% if results %}
@@ -13,8 +15,8 @@
   {% endfor %}
 </ul>
 {% endif %}
-{% if results|length == 0 %}
+{% if results|length == 0 and search == True %}
 <p>found 0 entries. try searching something else.</p>
-<p>note: some superheros have dashes in their names like ant-man and spider-man.</p>
+<p>note: some superheros have dashes in their names like ant-man, spider-man and the x-men.</p>
 {% endif %}
 {% endblock %}

@@ -29,8 +29,6 @@ def scrape_issues(data):
 
     return dicts
 
-# scrape_issues(("Amazing Spider-Man", (1963, 1998), 1987), count=10)
-# print(scrape_issues(("Ant-Man", ('2015', 'present'), 16451)))
 # print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
 
 def parse_title(name):
