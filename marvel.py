@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # ALL THE IMPORTS!
+import analytics
+import uuid
+import datetime
 from flask import Flask, request, g, redirect, url_for, render_template
 from time import process_time
 from playhouse.shortcuts import model_to_dict
@@ -8,6 +11,8 @@ from scrape import *
 from db import *
 
 app = Flask(__name__)
+
+analytics.write_key = '3jPlLTLsajh0UoIfYq3L95EdiErVaZ57'
 
 def init_db():
     db.connect()
@@ -110,6 +115,9 @@ def title_by_id(title_id):
 
 @app.route('/refresh/titles')
 def refresh_titles():
+    analytics.track(str(uuid.uuid4()), 'Refresh Titles', {
+        'timestamp': datetime.datetime.now()
+    })
     Comic.delete().execute()
     titles = scrape_titles()
     titles = list(map(lambda x: dict({'search_title': fn.to_tsvector(x['title'])}, **x), titles))
@@ -124,6 +132,10 @@ def refresh_titles():
 def refresh_issues(title_id):
     Issue.delete().where(Issue.series == title_id).execute()
     comic = Comic.get(Comic.id == title_id)
+    analytics.track(str(uuid.uuid4()), 'Refresh Issues', {
+        'series': comic.title,
+        'timestamp': datetime.datetime.now()
+    })
     issues = scrape_issues(model_to_dict(comic))
     issues = list(map(lambda x: dict({'series': comic}, **x), issues))
 
