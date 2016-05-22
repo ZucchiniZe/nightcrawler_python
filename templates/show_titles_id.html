@@ -13,8 +13,13 @@
 {% else %}
 <ul>
   {% for issue in issues %}
-  <li><a href="{{ issue.link }}">{{ issue.title }}</a></li>
+  <li><a class="marvel-issue" href="{{ issue.link }}" data-comic="{{ title.title }}" data-issue="{{ issue.title }}" data-num="{{ issue.num }}">{{ issue.title }}</a></li>
   {% endfor %}
 </ul>
 {% endif %}
+{% endblock %}
+
+{% block script %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename='track.js') }}"></script>
 {% endblock %}
