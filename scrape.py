@@ -19,7 +19,7 @@ def scrape_issues(data):
         data = {}
         tree = html.fromstring(container)
         data['title'] = tree.xpath('//h5/a/text()')[0].strip()
-        data['link'] = tree.xpath('//a[@class="see-inside"]/@href')[0] or None
+        data['link'] = tree.xpath('//a[@class="see-inside"]/@href') or None
         data['id'] = int(data['link'].split('/')[-1])
         data['num'] = float(parse('{} #{}', data['title'])[-1]) or None
         if not data['link'] == None:
