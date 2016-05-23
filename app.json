@@ -1,0 +1,25 @@
+{
+  "name": "nightcrawler",
+  "scripts": {
+    "postdeploy": "bin/setup"
+  },
+  "env": {
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1
+    },
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "heroku-postgresql",
+    "heroku-redis"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
