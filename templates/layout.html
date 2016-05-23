@@ -23,6 +23,13 @@
         <li{% if request.path == "/search" %} class="active"{% endif %}><a href="/search">search</a></li>
       </ul>
     </div>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     {% block body %}{% endblock %}
     {% block script %}{% endblock %}
   </div>
