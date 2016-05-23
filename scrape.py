@@ -27,7 +27,7 @@ def scrape_issues(data):
 
     return dicts
 
-print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
+# print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
 
 def parse_title(name):
     years = name.rsplit('(', 1)[1][:-1]

@@ -3,7 +3,12 @@ from peewee import *
 from playhouse.db_url import connect
 from playhouse.postgres_ext import *
 
-db = connect(os.environ.get('DATABASE') or 'postgresext://postgres:mysecretpassword@localhost:5432/marvel')
+db_url = os.environ.get('DATABASE_URL') or 'postgres://postgres:mysecretpassword@localhost:5432/marvel'
+split = db_url.split(':')
+split = ['postgresext' if i == 0 else e for i, e in enumerate(split)]
+db_url = ':'.join(split)
+
+db = connect(db_url)
 
 class Comic(Model):
     id = PrimaryKeyField()
