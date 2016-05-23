@@ -1,2 +1,3 @@
 #!/bin/sh
 psql $DATABASE_URL -c "CREATE EXTENSION hstore;"
+python -c "from marvel import init_db; init_db()"
