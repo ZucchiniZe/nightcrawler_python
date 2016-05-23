@@ -22,6 +22,7 @@ def scrape_issues(data):
         data['title'] = tree.xpath('//h5/a/text()')[0].strip()
 
         data['link'] = tree.xpath('//a[@class="see-inside"]/@href') or None
+
         if data['link'] is not None:
             data['link'] = data['link'][0]
             data['id'] = int(data['link'].split('/')[-1])
