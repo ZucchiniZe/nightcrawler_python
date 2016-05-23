@@ -65,6 +65,7 @@ def show_front():
 def show_titles():
     titles = (Comic
               .select()
+              .order_by(Comic.title)
               .dicts())
     return render_template('show_titles.html', titles=titles)
 
@@ -73,6 +74,7 @@ def show_synced():
     titles = (Comic
               .select()
               .where(Comic.scraped == True)
+              .order_by(Comic.title)
               .dicts())
     return render_template('show_titles.html', titles=titles, synced=True)
 
