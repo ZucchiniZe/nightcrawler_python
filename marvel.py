@@ -7,10 +7,18 @@ import datetime
 from flask import Flask, request, g, redirect, url_for, render_template
 from time import process_time
 from playhouse.shortcuts import model_to_dict
+from opbeat.contrib.flask import Opbeat
 from scrape import *
 from db import *
 
 app = Flask(__name__)
+
+opbeat = Opbeat(
+    app,
+    organization_id='e4a92e8bae9a4cd9b82ad1ccb4f09f83',
+    app_id='10c2a61210',
+    secret_token='fb88ac5a782f33e09260b785b650cfff98df5c1f',
+)
 
 analytics.write_key = '3jPlLTLsajh0UoIfYq3L95EdiErVaZ57'
 

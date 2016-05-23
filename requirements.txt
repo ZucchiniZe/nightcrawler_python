@@ -11,3 +11,5 @@ wheel==0.24.0
 peewee==2.8.1
 psycopg2==2.6.1
 analytics-python==1.2.3
+opbeat==3.3.1
+blinker==1.4
