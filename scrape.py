@@ -18,16 +18,27 @@ def scrape_issues(data):
     for container in containers:
         data = {}
         tree = html.fromstring(container)
+
         data['title'] = tree.xpath('//h5/a/text()')[0].strip()
+
         data['link'] = tree.xpath('//a[@class="see-inside"]/@href') or None
-        data['id'] = int(data['link'].split('/')[-1])
-        data['num'] = float(parse('{} #{}', data['title'])[-1]) or None
-        if not data['link'] == None:
+        if data['link'] is not None:
+            data['link'] = data['link'][0]
+            data['id'] = int(data['link'].split('/')[-1])
+        else:
+            data['id'] = None
+
+        if '#' in data['title']:
+            data['num'] = float(parse('{} #{}', data['title'])[-1])
+        else:
+            data['num'] = None
+
+        if data['link'] is not None:
             dicts.append(data)
 
     return dicts
 
-# print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
+# print(scrape_issues({'title': 'Ant-Man', 'id': 2258}))
 
 def parse_title(name):
     years = name.rsplit('(', 1)[1][:-1]

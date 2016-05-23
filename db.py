@@ -5,7 +5,7 @@ from playhouse.postgres_ext import *
 
 db_url = os.environ.get('DATABASE_URL') or 'postgres://postgres:mysecretpassword@localhost:5432/marvel'
 split = db_url.split(':')
-split = ['postgresext' if i == 0 else e for i, e in enumerate(split)]
+split = ['postgresext' if i is 0 else e for i, e in enumerate(split)]
 db_url = ':'.join(split)
 
 db = connect(db_url)
