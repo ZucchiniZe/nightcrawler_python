@@ -1,0 +1,2 @@
+#!/bin/sh
+psql $DATABASE_URL -c "CREATE EXTENSION hstore;"
