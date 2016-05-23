@@ -27,9 +27,11 @@ def make_celery(app):
 app = Flask(__name__)
 
 app.secret_key = 'sekrit'
+
+redis_url = os.environ.get('REDIS_URL') or 'redis://localhost:6379'
 app.config.update(
-    CELERY_BROKER_URL='redis://localhost:6379',
-    CELERY_RESULT_BACKEND='redis://localhost:6379'
+    CELERY_BROKER_URL=redis_url,
+    CELERY_RESULT_BACKEND=redis_url,
 )
 
 celery = make_celery(app)
