@@ -1,4 +1,4 @@
-from lxml import html
+from lxml import html, etree
 from parse import parse
 import requests
 
@@ -12,23 +12,22 @@ def scrape_issues(data):
     page = requests.get(url)
     tree = html.fromstring(page.content)
 
-    titles = [x.strip() for x in tree.xpath('//div[@class="row-item comic-item"]/div[@class="row-item-text"]/h5/a[@class="meta-title"]/text()')]
-    links = tree.xpath('//div[@class="row-item comic-item"]/div[@class="row-item-text"]/a[@class="see-inside"]/@href')
-    ids = list(map(lambda s: int(s.split('/')[-1]), links))
-    nums = []
-    for title in titles:
-        if '#' in title:
-            nums.append(float(parse("{} #{}", title)[-1]))
-        else:
-            nums.append(None)
+    containers = [etree.tostring(row) for row in tree.xpath('//div[@class="row-item comic-item"]/div[@class="row-item-text"]')]
+    dicts = []
 
-
-    both = list(zip(titles, links, ids, nums))
-    dicts = [{'title': cur[0], 'link': cur[1], 'id': cur[2], 'num': cur[3]} for cur in both]
+    for container in containers:
+        data = {}
+        tree = html.fromstring(container)
+        data['title'] = tree.xpath('//h5/a/text()')[0].strip()
+        data['link'] = tree.xpath('//a[@class="see-inside"]/@href')[0] or None
+        data['id'] = int(data['link'].split('/')[-1])
+        data['num'] = float(parse('{} #{}', data['title'])[-1]) or None
+        if not data['link'] == None:
+            dicts.append(data)
 
     return dicts
 
-# print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
+print(scrape_issues({'title': 'Ant-Man', 'id': 16451}))
 
 def parse_title(name):
     years = name.rsplit('(', 1)[1][:-1]
