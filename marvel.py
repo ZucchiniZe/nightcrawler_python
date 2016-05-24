@@ -74,7 +74,7 @@ def before_request():
     g.db = db
     g.db.connect()
     if 'nightcrawler-m.herokuapp.com' in request.host:
-        redirect('http://nightcrawler.us' + request.path, status=301)
+        redirect('http://nightcrawler.us' + request.path, code=301)
 
 @app.teardown_request
 def teardown_request(exception):
