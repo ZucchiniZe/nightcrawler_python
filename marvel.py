@@ -73,6 +73,7 @@ def parse_year(year):
 def before_request():
     g.db = db
     g.db.connect()
+    print(request.headers.get('Host'))
     if 'nightcrawler-m.herokuapp.com' in request.headers.get('Host'):
         redirect('http://www.nightcrawler.us' + request.path, code=301)
 
