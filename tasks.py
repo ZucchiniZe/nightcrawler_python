@@ -1,7 +1,7 @@
 import uuid
-import datetime
 import analytics
 from playhouse.shortcuts import model_to_dict
+from datetime import datetime
 from scrape import *
 from db import *
 
@@ -12,7 +12,7 @@ def import_issues(title_id):
     comic = Comic.get(Comic.id == title_id)
     analytics.track(str(uuid.uuid4()), 'Refresh Issues', {
         'series': comic.title,
-        'timestamp': datetime.datetime.now()
+        'timestamp': datetime.now()
     })
     issues = scrape_issues(model_to_dict(comic))
     issues = list(map(lambda x: dict({'series': comic}, **x), issues))
@@ -21,13 +21,13 @@ def import_issues(title_id):
         for idx in range(0, len(issues), 199):
             Issue.insert_many(issues[idx:idx+199]).execute()
 
-    Comic.update(scraped=True).where(Comic.id == title_id).execute()
+    Comic.update(scraped=True, refreshed_at=datetime.now()).where(Comic.id == title_id).execute()
     db.close()
 
 def import_titles():
     db.connect()
     analytics.track(str(uuid.uuid4()), 'Refresh Titles', {
-        'timestamp': datetime.datetime.now()
+        'timestamp': datetime.now()
     })
     Comic.delete().execute()
     titles = scrape_titles()
