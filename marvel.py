@@ -82,8 +82,8 @@ def teardown_request(exception):
 def show_front():
     return render_template('frontpage.html')
 
-@cache.cached(timeout=300)
 @app.route('/titles')
+@cache.cached(timeout=300)
 def show_titles():
     titles = (Comic
               .select()
