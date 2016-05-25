@@ -163,7 +163,6 @@ def refresh_titles():
 @app.route('/refresh/issues/<int:title_id>')
 def refresh_issues(title_id):
     comic = Comic.get(Comic.id == title_id)
-    Issue.delete().where(Issue.series == title_id).execute()
     issues = q.enqueue(import_issues, title_id)
     flash('Scraping issues for {} has been queued, please refresh in a few seconds'.format(comic.title))
     return redirect(url_for('title_by_id', title_id=title_id))
