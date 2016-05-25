@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from peewee import *
 from playhouse.db_url import connect
 from playhouse.postgres_ext import *
@@ -16,6 +17,7 @@ class Comic(Model):
     start = IntegerField()
     end = IntegerField(null=True)
     scraped = BooleanField(default=False)
+    refreshed_at = DateTimeField(default=datetime.now)
     search_title = TSVectorField()
 
     class Meta:

@@ -2,6 +2,8 @@
 
 # ALL THE IMPORTS!
 import rq_dashboard
+import humanize
+import datetime
 from flask import Flask, request, g, redirect, url_for, render_template, flash
 from flask.ext.cache import Cache
 from urllib.parse import urlparse
@@ -66,6 +68,10 @@ def pluralize(number, singular='', plural='s'):
 def parse_year(year):
     if year == 0: return 'Present'
     return year
+
+@app.template_filter('naturaltime')
+def natural_time(time):
+    return humanize.naturaltime(time)
 
 @app.before_request
 def before_request():
