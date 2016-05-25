@@ -71,7 +71,10 @@ def parse_year(year):
 
 @app.template_filter('naturaltime')
 def natural_time(time):
-    return humanize.naturaltime(time)
+    if time is None:
+        return 'Never'
+    else:
+        return humanize.naturaltime(time)
 
 @app.before_request
 def before_request():
