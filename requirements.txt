@@ -17,3 +17,4 @@ click==6.6
 rq==0.6.0
 arrow==0.7.0
 rq-dashboard==0.3.7
+blinker==1.4
