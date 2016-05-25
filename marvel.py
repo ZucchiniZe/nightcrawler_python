@@ -4,6 +4,7 @@
 import rq_dashboard
 from flask import Flask, request, g, redirect, url_for, render_template, flash
 from urllib.parse import urlparse
+from werkzeug.contrib.cache import RedisCache
 from time import process_time
 from playhouse.shortcuts import model_to_dict
 from opbeat.contrib.flask import Opbeat
@@ -25,6 +26,23 @@ q = Queue(connection=conn)
 app.config.from_object(rq_dashboard.default_settings)
 app.config.update(REDIS_URL=redis_url)
 app.register_blueprint(rq_dashboard.blueprint, url_prefix='/rq')
+
+CACHE_TIMEOUT = 300
+
+cache = RedisCache(host=url.hostname, port=url.port, db=1, password=url.password, key_prefix='cache')
+
+class cached(object):
+    def __init__(self, timeout=None):
+        self.timeout = timeout or CACHE_TIMEOUT
+
+    def __call__(self, f):
+        def decorator(*args, **kwargs):
+            response = cache.get(request.path)
+            if response is None:
+                response = f(*args, **kwargs)
+                cache.set(request.path, response, self.timeout)
+            return response
+        return decorator
 
 opbeat = Opbeat(
     app,
@@ -73,6 +91,7 @@ def teardown_request(exception):
 def show_front():
     return render_template('frontpage.html')
 
+@cached
 @app.route('/titles')
 def show_titles():
     titles = (Comic
