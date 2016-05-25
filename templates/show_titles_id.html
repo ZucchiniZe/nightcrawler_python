@@ -10,7 +10,7 @@
 </div>
 {% if issues|length == 0 %}
 {% if title.scraped %}
-<h3>{{ title.title }} has been scraped but hasn't returned any results, this likely means that there aren't any marvel unlimited issues available.</h3>
+<p>{{ title.title }} has been scraped but hasn't returned any results, this likely means that there aren't any marvel unlimited issues available.</p>
 {% else %}
 <h3>Please click the refresh button above to scrape the marvel.com website</h3>
 {% endif %}
