@@ -78,7 +78,6 @@ def before_request():
 def teardown_request(exception):
     g.db.close()
 
-
 @app.route('/')
 def show_front():
     return render_template('frontpage.html')
