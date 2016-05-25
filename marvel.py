@@ -92,7 +92,7 @@ def show_front():
     return render_template('frontpage.html')
 
 @app.route('/titles')
-@cache.cached(timeout=300)
+@cache.cached(timeout=60*60*3)
 def show_titles():
     titles = (Comic
               .select()
