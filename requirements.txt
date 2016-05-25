@@ -12,6 +12,8 @@ peewee==2.8.1
 psycopg2==2.6.1
 analytics-python==1.2.3
 opbeat==3.3.1
-blinker==1.4
-celery==3.1.23
 redis==2.10.5
+click==6.6
+rq==0.6.0
+arrow==0.7.0
+rq-dashboard==0.3.7
