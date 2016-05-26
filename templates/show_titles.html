@@ -1,20 +1,23 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{% if titles|length == 0 %}
-{% if synced %}
-<h2>No synced titles currently</h2>
-{% else %}
-<h2>There are no titles, click <a href="/refresh/titles">here</a> to refresh them</h2>
-{% endif %}
-{% else %}
-  <ul class="titles">
-  {% for title in titles %}
-    <li>
-      <h2><span class="scraped{% if title.scraped %} yes{% else %} no{% endif %}">{{ title.scraped|scraped }}</span> <a href="/title/{{ title.id }}">{{ title.title }}</a></h2>
-      {{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %}
-    </li>
-  {% endfor %}
-  </ul>
-{% endif %}
+  {% if titles|length == 0 %}
+    {% if synced %}
+      <h2>No synced titles currently</h2>
+    {% else %}
+      <h2>There are no titles, click <a href="/refresh/titles">here</a> to refresh them</h2>
+    {% endif %}
+    {% else %}
+      <ul class="titles">
+      {% for title in titles %}
+        <li>
+          <h2>
+            <span class="scraped{% if title.scraped %} yes{% else %} no{% endif %}">{{ title.scraped|scraped }}</span>
+            <a href="/title/{{ title.id }}">{{ title.title }}</a>
+          </h2>
+          {{ title.start }}{% if title.end != -1 %} - {{ title.end|parseyear }}{% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+  {% endif %}
 {% endblock %}

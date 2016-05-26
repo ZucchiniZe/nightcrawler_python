@@ -50,6 +50,7 @@ def init_db():
     db.create_tables([Comic, Issue])
     db.close()
 
+app.jinja_env.cache = {}
 app.jinja_env.globals.update(get_url=get_url)
 
 @app.template_filter('scraped')

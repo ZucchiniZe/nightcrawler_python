@@ -1,24 +1,28 @@
 {% extends "layout.html" %}
+
 {% block body %}
-<h2>Search {{ totals[0] }} comics and {{ totals[1] }} issues</h2>
-{% if results is not defined %}
-<p>Please only tick the advanced search if you know how to use it. It uses PostgreSQL's full text search, which only matches single words with boolean operators.</p>
-{% endif %}
-<form>
-  Advanced Search: <input name="adv" type="checkbox" value="on" {% if adv == "on" %}checked{%  endif %}/><br/>
-  Search: <input name="q" type="text" value="{{query}}" onfocus="this.select()" onblur="return false"/>
-  <input type="submit" value="Search"/>
-</form>
-{% if results %}
-<p>found {{ results|length }} entr{{ results|length|pluralize('y', 'ies') }} in {{ elapsed }} milliseconds</p>
-<ul>
-  {% for result in results %}
-  <li><span class="scraped{% if result.scraped %} yes{% else %} no{% endif %}">{{ result.scraped|scraped }}</span><a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end != -1 %} - {{ result.end|parseyear }}{% endif %})</a></li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% if results|length == 0 and search == True %}
-<p>found 0 entries. try searching something else.</p>
-<p>note: some superheros have dashes in their names like ant-man, spider-man and the x-men.</p>
-{% endif %}
+  <h2>Search {{ totals[0] }} comics and {{ totals[1] }} issues</h2>
+  {% if results is not defined %}
+    <p>Please only tick the advanced search if you know how to use it. It uses PostgreSQL's full text search, which only matches single words with boolean operators.</p>
+  {% endif %}
+  <form>
+    Advanced Search: <input name="adv" type="checkbox" value="on" {% if adv == "on" %}checked{%  endif %}/><br/>
+    Search: <input name="q" type="text" value="{{query}}" onfocus="this.select()" onblur="return false"/>
+    <input type="submit" value="Search"/>
+  </form>
+  {% if results %}
+    <p>found {{ results|length }} entr{{ results|length|pluralize('y', 'ies') }} in {{ elapsed }} milliseconds</p>
+    <ul>
+      {% for result in results %}
+        <li>
+          <span class="scraped{% if result.scraped %} yes{% else %} no{% endif %}">{{ result.scraped|scraped }}</span>
+          <a href="/title/{{ result.id }}">{{ result.title }} ({{ result.start }}{% if result.end != -1 %} - {{ result.end|parseyear }}{% endif %})</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if results|length == 0 and search == True %}
+    <p>found 0 entries. try searching something else.</p>
+    <p>note: some superheros have dashes in their names like ant-man, spider-man and the x-men.</p>
+  {% endif %}
 {% endblock %}
