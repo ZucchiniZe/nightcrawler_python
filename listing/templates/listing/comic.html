@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Showing {{ comic.title }}{% endblock %}
+
+{% block content %}
+  <h1>{{ comic.title }}</h1>
+  <p>{{ comic.run }}</p>
+  <ul>
+    {% for issue in comic.issue_set.all %}
+      <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a> <a href="{{ issue.link }}">read now</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

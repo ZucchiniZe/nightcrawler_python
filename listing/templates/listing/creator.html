@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Showing {{ creator.name }}{% endblock %}
+
+{% block content %}
+  <h1>{{ creator.name }}</h1>
+  <ul>
+    {% for issue in creator.issues.all %}
+      <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a> <a href="{{ issue.link }}">read now</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

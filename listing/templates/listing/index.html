@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Listing all comics{% endblock %}
+
+{% block content %}
+  {% for comic in query %}
+    <h1><a href="{% url 'listing:comic' comic.id %}">{{ comic.title }}</a></h1>
+    <p>{{ comic.run }}</p>
+  {% endfor %}
+{% endblock %}
