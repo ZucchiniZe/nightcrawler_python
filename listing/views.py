@@ -1,47 +1,49 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.views import generic
 
 from django_q.tasks import async
 from django_q.humanhash import humanize
-from haystack.generic_views import SearchView
-from haystack.forms import SearchForm
-from haystack.constants import DEFAULT_ALIAS
-from haystack import connections
 
 from .models import Comic, Issue, Creator
 from .tasks import scrape_titles, scrape_issues
 from .hooks import import_titles, import_issues
 
 
-def index(request):
-    return render(request, 'listing/frontpage.html')
+class IndexView(generic.TemplateView):
+    template_name = 'listing/frontpage.html'
 
 
-def listing(request):
-    query = Comic.objects.all()
-    return render(request, 'listing/listing.html', {'query': query})
+class AllTitleView(generic.ListView):
+    template_name = 'listing/listing.html'
+    context_object_name = 'query'
+
+    def get_queryset(self):
+        return Comic.objects.all()
 
 
-def synced(request):
-    query = Comic.objects.filter(scraped=True)
-    return render(request, 'listing/listing.html', {'query': query, 'synced': True})
+class SyncedView(generic.ListView):
+    template_name = 'listing/listing.html'
+    context_object_name = 'query'
+
+    def get_queryset(self):
+        return Comic.objects.filter(scraped=True)
 
 
-def comic(request, pk):
-    comic = get_object_or_404(Comic, pk=pk)
-    return render(request, 'listing/comic.html', {'comic': comic})
+class ComicView(generic.DetailView):
+    model = Comic
+    template_name = 'listing/comic.html'
 
 
-def issue(request, pk):
-    issue = get_object_or_404(Issue, pk=pk)
-    return render(request, 'listing/issue.html', {'issue': issue})
+class IssueView(generic.DetailView):
+    model = Issue
+    template_name = 'listing/issue.html'
 
 
-def creator(request, pk):
-    creator = get_object_or_404(Creator, pk=pk)
-    return render(request, 'listing/creator.html', {'creator': creator})
+class CreatorView(generic.DetailView):
+    model = Creator
+    template_name = 'listing/creator.html'
 
 
 def refresh_comics(request):
