@@ -1,13 +1,40 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
 
-{% block title %}Showing {{ comic.title }}{% endblock %}
+{% block title %}Showing issues for {{ comic.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ comic.title }}</h1>
-  <p>{{ comic.run }}</p>
-  <ul>
-    {% for issue in comic.issue_set.all %}
-      <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a> <a href="{{ issue.link }}">read now</a></li>
-    {% endfor %}
-  </ul>
+  <div class="comic-info">
+    <h2>{{ comic.title }} ({{ comic.run }})</h2>
+    <span class="extra-info">
+      {% if comic.scraped %}
+        Refreshed {{ comic.refreshed_at|naturaltime }}
+      {% endif %}
+      <a href="{% url 'listing:refresh_issues' comic.id %}">refresh now</a>
+      | <a href="{{ comic.url }}">{{ comic.title }} on marvel.com</a>
+    </span>
+  </div>
+  {% if comic.issue_set.all|length_is:"0" %}
+    {% if comic.scraped %}
+      <p>{{ comic.title }} has been scraped but hasn't returned any results, this likely means that there aren't any marvel unlimited issues available.</p>
+    {% else %}
+      <h3>Please click the refresh button above to scrape the marvel.com website</h3>
+    {% endif %}
+  {% else %}
+    <ul>
+      {% for issue in comic.issue_set.all %}
+        <li>
+          <a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a>
+          <a class="read-issue" href="{{ issue.link }}"
+             data-comic="{{ comic.title }}"
+             data-issue="{{ issue.title }}"
+             data-num="{{ issue.num }}">read now</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'listing/track.js' %}"></script>
 {% endblock %}

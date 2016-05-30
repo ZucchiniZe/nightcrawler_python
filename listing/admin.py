@@ -5,7 +5,7 @@ from .models import Comic, Issue, Creator
 
 
 class ComicAdmin(admin.ModelAdmin):
-    list_display = ('title', 'issues', 'run', 'scraped', 'refreshed_at')
+    list_display = ('id', 'title', 'issues', 'run', 'scraped', 'refreshed_at')
     list_filter = ('scraped', 'refreshed_at')
     search_fields = ('title',)
 

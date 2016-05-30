@@ -1,4 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django_q.tasks import async
+
+from .tasks import get_url, index_object
 
 
 class Comic(models.Model):
@@ -22,8 +27,19 @@ class Comic(models.Model):
     def issues(self):
         return self.issue_set.count()
 
+    @property
+    def url(self):
+        return get_url(self.id, title=self.title, all=False)
+
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('listing:comic', args=(self.id,))
+
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['title']
 
 
 class Issue(models.Model):
@@ -35,8 +51,13 @@ class Issue(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('listing:issue', args=(self.id,))
+
     class Meta:
         ordering = ['num']
+
 
 class Creator(models.Model):
     first = models.CharField(max_length=100)
@@ -56,3 +77,9 @@ class Creator(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.first, self.last)
+
+
+@receiver(post_save, sender=Comic)
+@receiver(post_save, sender=Issue)
+def object_changed(sender, instance, **kwargs):
+    async(index_object, sender, instance, save=False)

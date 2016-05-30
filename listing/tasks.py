@@ -2,10 +2,15 @@ from lxml import html, etree
 from parse import parse
 import requests
 
+from haystack import connection_router, connections
 
-def get_url(id):
-    url = "http://marvel.com/comics/series/{id}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
-    url = url.format(id=id, title='title')
+
+def get_url(id, title='title', all=True):
+    if all:
+        url = "http://marvel.com/comics/series/{id}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
+    else:
+        url = "http://marvel.com/comics/series/{id}/{title}"
+    url = url.format(id=id, title=title)
     return url
 
 
@@ -42,8 +47,6 @@ def scrape_issues(data, comic):
 
     return dicts, comic
 
-# print(scrape_issues(2258))
-
 
 def parse_title(name):
     years = name.rsplit('(', 1)[1][:-1]
@@ -66,10 +69,6 @@ def parse_title(name):
         data = (title, (year, -1))
     return data
 
-# parse_title("X-Men Origins: Wolverine (2013 - 2015)")
-# parse_title("Deadpool (2010)")
-# parse_title("Avengers (2012 - Present)")
-
 
 def scrape_titles():
     url = "http://marvel.com/comics/series"
@@ -90,4 +89,9 @@ def scrape_titles():
     return dicts
 
 
-# print(scrape_titles())
+def index_object(sender, instance):
+    backends = connection_router.for_write(instance=instance)
+
+    for backend in backends:
+        index = connections[backend].get_unified_index().get_index(sender)
+        index.update_object(instance, using=backend)

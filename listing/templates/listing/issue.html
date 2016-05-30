@@ -3,7 +3,7 @@
 {% block title %}Showing {{ issue.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ issue.title }}</h1>
+  <h2>{{ issue.title }}</h2>
   <ul>
     {% for creator in issue.creator_set.all %}
       <li><a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a></li>

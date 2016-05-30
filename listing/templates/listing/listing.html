@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Listing all {{ synced|yesno:"synced," }} comics{% endblock %}
+
+{% block content %}
+  {% if query|length_is:"0" %}
+    {% if synced %}
+      <h2>There are no synced comics currently.</h2>
+    {% else %}
+      <h2>There are no titles, click <a href="{% url 'listing:refresh_comics' %}">here</a> to refresh them</h2>
+    {% endif %}
+  {% else %}
+    <ul class="titles">
+      {% for comic in query %}
+        <li>
+          <h2>
+            <span class="scraped {{ comic.scraped|yesno }}">{{ comic.scraped|yesno:"✓,✗" }}</span>
+            <a href="{% url 'listing:comic' comic.id %}">{{ comic.title }}</a>
+          </h2>
+          {{ comic.run }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
