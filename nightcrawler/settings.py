@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'listing',
     'haystack',
     'django_q',
+    'opbeat.contrib.django',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -167,3 +169,11 @@ DATABASES['default'].update(db_from_env)
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+# Opbeat stat tracking
+
+OPBEAT = {
+    'ORGANIZATION_ID': 'e4a92e8bae9a4cd9b82ad1ccb4f09f83',
+    'APP_ID': '10c2a61210',
+    'SECRET_TOKEN': 'fb88ac5a782f33e09260b785b650cfff98df5c1f',
+}
