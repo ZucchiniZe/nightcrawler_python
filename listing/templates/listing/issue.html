@@ -4,6 +4,7 @@
 
 {% block content %}
   <h2>{{ issue.title }}</h2>
+  <h4>Series: <a href="{% url 'listing:comic' issue.comic.id %}">{{ issue.comic.title }}</a></h4>
   <ul>
     {% for creator in issue.creator_set.all %}
       <li><a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a></li>

@@ -100,3 +100,13 @@ h2 {
 .comic-info a {
   text-decoration: none;
 }
+
+li.issue {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #607d8b;
+  width: 70%;
+}
+
+li.issue a {
+  text-decoration: none;
+}

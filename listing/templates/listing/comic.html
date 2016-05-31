@@ -24,17 +24,22 @@
   {% else %}
     <ul>
       {% for issue in comic.issue_set.all %}
-        <li>
-          <a class="read-issue" href="{{ issue.link }}"
-             data-comic="{{ comic.title }}"
-             data-issue="{{ issue.title }}"
-             data-num="{{ issue.num }}">{{ issue.title }}</a>
-          <br/> Creators:
-          {% for creator in issue.creator_set.all %}
-            <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>{% include 'comma.html' %}
-          {% endfor %}
+        <li class="issue">
+          <div class="issue-info">
+            {{ issue.title }}
+            <a class="read-issue"
+               href="{{ issue.link }}"
+               data-comic="{{ comic.title }}"
+               data-issue="{{ issue.title }}"
+               data-num="{{ issue.num }}">Read now</a>
+          </div>
+          <div class="issue-creators">
+            Creators:
+            {% for creator in issue.creator_set.all %}
+              <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>{% include 'comma.html' %}
+            {% endfor %}
+          </div>
         </li>
-        <br/>
       {% endfor %}
     </ul>
   {% endif %}
