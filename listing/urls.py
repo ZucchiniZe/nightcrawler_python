@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^comics/$', views.AllTitleView.as_view(), name='listing'),
+    url(r'^titles/$', views.AllTitleView.as_view(), name='titles'),
     url(r'^synced/$', views.SyncedView.as_view(), name='synced'),
     url(r'^comic/(?P<pk>[0-9]+)/$', views.ComicView.as_view(), name='comic'),
     url(r'^title/(?P<pk>[0-9]+)/$', views.ComicView.as_view(), name='title'),
