@@ -23,6 +23,7 @@
       {% endif %}
     {% empty %}
       <p>No results found</p>
+      <p>note: some superheroes have dashes in their names which can't be one name. spiderman should be spider-man or spider man</p>
     {% endfor %}
     </ul>
   {% else %}
@@ -30,7 +31,7 @@
     <ul>
       <li>search for <a href="?q=new+avengers+12"><code>new avengers 12</code></a> to search for a specific issue</li>
       <li>search for <a href="?q=x+men+scraped:true"><code>x men scraped:true</code></a> to search for all comics that contain the words x and men that have been scraped</li>
-      <li>search for <a href="?q=spider+NOT+man"><code>spider NOT man</code></a> to search for all comics that have the word spider but not man in them</li>
+      <li>search for <a href="?q=spider+-man"><code>spider -man</code></a> to search for all comics that have the word spider but not man in them</li>
       <li>add <a href="?q=scraped:true"><code>scraped:true</code></a> to your query to get comics that have been scraped</li>
       <li>add <a href="?q=start:1990"><code>start:1990</code></a> to your query to get comics that started in 1990</li>
       <li>add <a href="?q=end:2000"><code>end:2000</code></a> to your query to get comics that ended in 2000</li>

@@ -20,11 +20,13 @@
       <img style="max-height: 0.7em" src="{% static 'listing/nightcrawler.png' %}"/>
       Nightcrawler
     </a></h1>
+    {% with request.resolver_match.view_name as url_name %}
     <ul class="nav">
-      <li><a href="{% url 'listing:listing' %}">comics</a></li>
-      <li><a href="{% url 'listing:synced' %}">synced</a></li>
-      <li><a href="{% url 'listing:search' %}">search</a></li>
-    </ul>
+        <li{% if url_name == 'listing:listing' %} class="active"{% endif %}><a href="{% url 'listing:listing' %}">comics</a></li>
+        <li{% if url_name == 'listing:synced' %} class="active"{% endif %}><a href="{% url 'listing:synced' %}">synced</a></li>
+        <li{% if url_name == 'listing:search' %} class="active"{% endif %}><a href="{% url 'listing:search' %}">search</a></li>
+      </ul>
+    {% endwith %}
   </div>
   {% if messages %}
     <ul class="messages">
