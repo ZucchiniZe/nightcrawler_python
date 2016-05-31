@@ -2,13 +2,14 @@
 
 {% block content %}
   <h2>Search</h2>
-  <form>
+  <form method="get">
     <label for="search">Search:</label>
     <input id="search" type="text" name="q" value="{{ query }}">
     <input type="submit" value="Search">
   </form>
-  {% if results %}
+  {% if query %}
     <h3>Found {{ results.count }} Result{{ results.count|pluralize }}</h3>
+    <ul>
     {% for result in results %}
       {% if result.content_type == 'listing.comic' %}
         <li>
@@ -20,8 +21,21 @@
           <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
         </li>
       {% endif %}
+    {% empty %}
+      <p>No results found</p>
     {% endfor %}
+    </ul>
   {% else %}
-    <h3>No results found</h3>
+    <p>Some search examples:</p>
+    <ul>
+      <li>search for <a href="?q=new+avengers+12"><code>new avengers 12</code></a> to search for a specific issue</li>
+      <li>search for <a href="?q=x+men+scraped:true"><code>x men scraped:true</code></a> to search for all comics that contain the words x and men that have been scraped</li>
+      <li>search for <a href="?q=spider+NOT+man"><code>spider NOT man</code></a> to search for all comics that have the word spider but not man in them</li>
+      <li>add <a href="?q=scraped:true"><code>scraped:true</code></a> to your query to get comics that have been scraped</li>
+      <li>add <a href="?q=start:1990"><code>start:1990</code></a> to your query to get comics that started in 1990</li>
+      <li>add <a href="?q=end:2000"><code>end:2000</code></a> to your query to get comics that ended in 2000</li>
+      <li>add <a href="?q=start:>2010"><code>start:>2010</code></a> to your query to get comics started after 2010</li>
+      <li>add <a href="?q=start:<=1990"><code>start:<=1990</code></a> to your query to get comics started before or in 1990</li>
+    </ul>
   {% endif %}
 {% endblock %}

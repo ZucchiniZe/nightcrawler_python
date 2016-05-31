@@ -25,11 +25,12 @@
     <ul>
       {% for issue in comic.issue_set.all %}
         <li>
-          <a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a>
           <a class="read-issue" href="{{ issue.link }}"
              data-comic="{{ comic.title }}"
              data-issue="{{ issue.title }}"
-             data-num="{{ issue.num }}">read now</a></li>
+             data-num="{{ issue.num }}">{{ issue.title }}</a>
+          <a href="{% url 'listing:issue' issue.id %}">issue page</a>
+        </li>
       {% endfor %}
     </ul>
   {% endif %}
