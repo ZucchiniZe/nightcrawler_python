@@ -7,10 +7,10 @@ from haystack import connection_router, connections
 
 def get_url(id, title='title', all=True):
     if all:
-        url = "http://marvel.com/comics/series/{id}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
+        url = "http://marvel.com/comics/series/{}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
     else:
-        url = "http://marvel.com/comics/series/{id}/{title}"
-    url = url.format(id=id, title=title)
+        url = "http://marvel.com/comics/series/{}/{title}"
+    url = url.format(id, title=title)
     return url
 
 
@@ -44,6 +44,14 @@ def scrape_issues(data, comic):
 
         if data['link'] is not None:
             dicts.append(data)
+
+        data['creators'] = []
+        for container in [etree.tostring(row) for row in tree.xpath('//p[@class="meta-creators"]/a')]:
+            tree = html.fromstring(container)
+
+            creator = dict(name=tree.xpath('//text()')[0].strip(), id=tree.xpath('//@href')[0].split('/')[-2])
+
+            data['creators'].append(creator)
 
     return dicts, comic
 
@@ -85,6 +93,35 @@ def scrape_titles():
     both = [(a, b, c) for (a, b), c in zip(titles, ids)]
 
     dicts = [{'title': cur[0], 'start': cur[1][0], 'end': cur[1][1], 'id': cur[2], 'scraped': False} for cur in both]
+
+    return dicts
+
+
+def parse_name(name):
+    if ',' in name:
+        split = [str.strip() for str in name.split(',')]
+        # return ' '.join([split[-1], split[0]])
+        return [split[-1], split[0]]
+    else:
+        return [name]
+
+def scrape_creators():
+    url = "http://marvel.com/comics/creators"
+
+    page = requests.get(url)
+    tree = html.fromstring(page.content)
+
+    names = [parse_name(name) for name in tree.xpath("//div//ul[@class='JCAZList-MultiCol']/li//a/text()")]
+    urls = tree.xpath("//div//ul[@class='JCAZList-MultiCol']/li//a/@href")
+    ids = list(map(lambda s: int(s.split('/')[3]), urls))
+    full_urls = [str('http://marvel.com' + url) for url in urls]
+
+    dicts = []
+    for cur in zip(names, full_urls, ids):
+        if len(cur[0]) == 2:
+            dicts.append({'first': cur[0][0], 'last': cur[0][1], 'url': cur[1], 'id': cur[2]})
+        else:
+            dicts.append({'first': cur[0][0], 'last': '', 'url': cur[1], 'id': cur[2]})
 
     return dicts
 

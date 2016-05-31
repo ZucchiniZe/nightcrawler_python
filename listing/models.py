@@ -62,6 +62,7 @@ class Issue(models.Model):
 class Creator(models.Model):
     first = models.CharField(max_length=100)
     last = models.CharField(blank=True, max_length=100)
+    url = models.URLField(default='http://marvel.com/comics/creators')
     issues = models.ManyToManyField(Issue)
 
     @property
@@ -79,6 +80,15 @@ class Creator(models.Model):
         return "{} {}".format(self.first, self.last)
 
 
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('listing:creator', args=(self.id,))
+
+    class Meta:
+        ordering = ['first']
+
+
+@receiver(post_save, sender=Creator)
 @receiver(post_save, sender=Comic)
 @receiver(post_save, sender=Issue)
 def object_changed(sender, instance, **kwargs):

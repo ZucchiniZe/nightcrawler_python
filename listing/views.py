@@ -9,8 +9,8 @@ from django_q.humanhash import humanize
 from haystack.query import SearchQuerySet
 
 from .models import Comic, Issue, Creator
-from .tasks import scrape_titles, scrape_issues
-from .hooks import import_titles, import_issues
+from .tasks import scrape_titles, scrape_issues, scrape_creators
+from .hooks import import_titles, import_issues, import_creators
 
 
 class IndexView(generic.TemplateView):
@@ -33,6 +33,15 @@ class SyncedView(generic.ListView):
 
     def get_queryset(self):
         return Comic.objects.filter(scraped=True)
+
+
+class AllCreatorView(generic.ListView):
+    template_name = 'listing/creators.html'
+    context_object_name = 'query'
+    paginate_by = 100
+
+    def get_queryset(self):
+        return Creator.objects.all()
 
 
 class ComicView(generic.DetailView):
@@ -63,6 +72,13 @@ def refresh_issues(request, pk):
     id = humanize(id)
     messages.info(request, 'Refreshing issues for %s Please refresh in a few seconds. id: %s' % (comic.title, id))
     return HttpResponseRedirect(reverse('listing:comic', args=(pk,)))
+
+
+def refresh_creators(request):
+    id = async(scrape_creators, hook=import_creators)
+    id = humanize(id)
+    messages.info(request, 'Refreshing creators. Please refresh in a few seconds. id: %s' % id)
+    return HttpResponseRedirect(reverse('listing:creators'))
 
 
 def search(request):

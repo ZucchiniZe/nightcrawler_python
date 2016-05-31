@@ -21,6 +21,11 @@
           <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
         </li>
       {% endif %}
+      {% if result.content_type == 'listing.creator' %}
+        <li>
+          <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+        </li>
+      {% endif %}
     {% empty %}
       <p>No results found</p>
       <p>note: some superheroes have dashes in their names which can't be one name. spiderman should be spider-man or spider man</p>

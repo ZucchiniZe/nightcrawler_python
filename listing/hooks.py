@@ -21,6 +21,7 @@ def import_titles(task):
 def import_issues(task):
     results, comic = task.result
     for result in results:
+        creators = result.pop('creators')
         issue = Issue(comic=comic, **result)
         issue.save()
 
@@ -32,3 +33,12 @@ def import_issues(task):
     comic.save()
 
 
+def import_creators(task):
+    results = task.result
+    for result in results:
+        creator = Creator(**result)
+        creator.save()
+
+    analytics.track(str(uuid.uuid4()), 'Refresh Creators', {
+        'timestamp': datetime.now()
+    })

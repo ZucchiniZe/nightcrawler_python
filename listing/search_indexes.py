@@ -1,6 +1,6 @@
 from haystack import indexes
 
-from .models import Comic, Issue
+from .models import Comic, Issue, Creator
 
 
 class ComicIndex(indexes.SearchIndex, indexes.Indexable):
@@ -21,3 +21,11 @@ class IssueIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Issue
+
+
+class CreatorIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, model_attr='name')
+    type = indexes.CharField(default='creator')
+
+    def get_model(self):
+        return Creator
