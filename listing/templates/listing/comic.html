@@ -29,8 +29,12 @@
              data-comic="{{ comic.title }}"
              data-issue="{{ issue.title }}"
              data-num="{{ issue.num }}">{{ issue.title }}</a>
-          <a href="{% url 'listing:issue' issue.id %}">issue page</a>
+          <br/> Creators:
+          {% for creator in issue.creator_set.all %}
+            <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>{% include 'comma.html' %}
+          {% endfor %}
         </li>
+        <br/>
       {% endfor %}
     </ul>
   {% endif %}
