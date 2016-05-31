@@ -23,6 +23,13 @@ def import_issues(task):
     for result in results:
         creators = result.pop('creators')
         issue = Issue(comic=comic, **result)
+
+        for creator in creators:
+            del creator['name']
+            c, created = Creator.objects.get_or_create(**creator)
+            c.issues.add(issue)
+            c.save()
+
         issue.save()
 
     analytics.track(str(uuid.uuid4()), 'Refresh Issues', {

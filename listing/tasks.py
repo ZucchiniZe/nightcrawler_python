@@ -7,10 +7,10 @@ from haystack import connection_router, connections
 
 def get_url(id, title='title', all=True):
     if all:
-        url = "http://marvel.com/comics/series/{}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
+        url = "http://marvel.com/comics/series/{id}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
     else:
-        url = "http://marvel.com/comics/series/{}/{title}"
-    url = url.format(id, title=title)
+        url = "http://marvel.com/comics/series/{id}/{title}"
+    url = url.format(id=id, title=title)
     return url
 
 
