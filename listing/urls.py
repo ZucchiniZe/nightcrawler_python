@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^creator/(?P<pk>[0-9]+)/$', views.CreatorView.as_view(), name='creator'),
     url(r'^refresh/comics/$', views.refresh_comics, name='refresh_comics'),
     url(r'^refresh/issues/(?P<pk>[0-9]+)/$', views.refresh_issues, name='refresh_issues'),
+    url(r'^search/$', views.search, name='search')
 ]

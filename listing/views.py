@@ -2,9 +2,11 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
+from django.shortcuts import render
 
 from django_q.tasks import async
 from django_q.humanhash import humanize
+from haystack.query import SearchQuerySet
 
 from .models import Comic, Issue, Creator
 from .tasks import scrape_titles, scrape_issues
@@ -59,3 +61,11 @@ def refresh_issues(request, pk):
     id = humanize(id)
     messages.info(request, 'Refreshing issues for %s Please refresh in a few seconds. id: %s' % (comic.title, id))
     return HttpResponseRedirect(reverse('listing:comic', args=(pk,)))
+
+
+def search(request):
+    if 'q' in request.GET:
+        results = SearchQuerySet().raw_search(request.GET['q'])
+        return render(request, 'listing/search.html', {'results': results, 'query': request.GET['q']})
+    else:
+        return render(request, 'listing/search.html')
