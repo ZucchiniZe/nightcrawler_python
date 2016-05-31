@@ -20,6 +20,7 @@ class IndexView(generic.TemplateView):
 class AllTitleView(generic.ListView):
     template_name = 'listing/listing.html'
     context_object_name = 'query'
+    paginate_by = 100
 
     def get_queryset(self):
         return Comic.objects.all()
@@ -28,6 +29,7 @@ class AllTitleView(generic.ListView):
 class SyncedView(generic.ListView):
     template_name = 'listing/listing.html'
     context_object_name = 'query'
+    paginate_by = 100
 
     def get_queryset(self):
         return Comic.objects.filter(scraped=True)
