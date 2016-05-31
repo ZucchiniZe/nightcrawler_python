@@ -32,11 +32,13 @@
       <li>search for <a href="?q=new+avengers+12"><code>new avengers 12</code></a> to search for a specific issue</li>
       <li>search for <a href="?q=x+men+scraped:true"><code>x men scraped:true</code></a> to search for all comics that contain the words x and men that have been scraped</li>
       <li>search for <a href="?q=spider+-man"><code>spider -man</code></a> to search for all comics that have the word spider but not man in them</li>
-      <li>add <a href="?q=scraped:true"><code>scraped:true</code></a> to your query to get comics that have been scraped</li>
-      <li>add <a href="?q=start:1990"><code>start:1990</code></a> to your query to get comics that started in 1990</li>
-      <li>add <a href="?q=end:2000"><code>end:2000</code></a> to your query to get comics that ended in 2000</li>
-      <li>add <a href="?q=start:>2010"><code>start:>2010</code></a> to your query to get comics started after 2010</li>
-      <li>add <a href="?q=start:<=1990"><code>start:<=1990</code></a> to your query to get comics started before or in 1990</li>
+      <li>add <code>type:comic</code> to your query to only search for comics</li>
+      <li>add <code>type:issue</code> to your query to only search for issues</li>
+      <li>add <code>scraped:true</code> to your query to get comics that have been scraped</li>
+      <li>add <code>start:1990</code> to your query to get comics that started in 1990</li>
+      <li>add <code>end:2000</code> to your query to get comics that ended in 2000</li>
+      <li>add <code>start:>2010</code> to your query to get comics started after 2010</li>
+      <li>add <code>start:<=1990</code> to your query to get comics started before or in 1990</li>
     </ul>
   {% endif %}
 {% endblock %}
