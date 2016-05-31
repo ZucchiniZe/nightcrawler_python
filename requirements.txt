@@ -1,6 +1,7 @@
 analytics-python==1.2.3
 arrow==0.7.0
 blessed==1.14.1
+dj-database-url==0.4.1
 Django==1.9.6
 django-haystack==2.5.dev1
 django-picklefield==0.3.2
@@ -16,3 +17,4 @@ requests==2.10.0
 six==1.10.0
 urllib3==1.15.1
 wcwidth==0.1.6
+whitenoise==3.2

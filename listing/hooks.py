@@ -9,12 +9,9 @@ analytics.write_key = '3jPlLTLsajh0UoIfYq3L95EdiErVaZ57'
 
 def import_titles(task):
     results = task.result
-    comics = []
     for result in results:
         comic = Comic(**result)
-        comics.append(comic)
-
-    Comic.objects.bulk_create(comics)
+        comic.save()
 
     analytics.track(str(uuid.uuid4()), 'Refresh Titles', {
         'timestamp': datetime.now()
