@@ -4,9 +4,13 @@
 
 {% block content %}
   <h2>{{ creator.name }}</h2>
+  <p>This page only shows the currently synced issues, so data may not be fully accurate.</p>
+  <div class="creator-info"><a href="{{ creator.url }}">{{ creator.name }} on marvel.com</a></div>
   <ul>
     {% for issue in creator.issues.all %}
       <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a> <a href="{{ issue.link }}">read now</a></li>
+    {% empty %}
+      <p>{{ creator.name }} has no synced issues, <a href="{% url 'listing:search' %}">go</a> find some</p>
     {% endfor %}
   </ul>
 {% endblock %}

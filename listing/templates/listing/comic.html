@@ -33,12 +33,16 @@
                data-issue="{{ issue.title }}"
                data-num="{{ issue.num }}">Read now</a>
           </div>
-          <div class="issue-creators">
-            Creators:
-            {% for creator in issue.creator_set.all %}
-              <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>{% include 'comma.html' %}
-            {% endfor %}
-          </div>
+          {% if issue.creator_set.all %}
+            <div class="issue-creators">
+              Creators:
+              {% for creator in issue.creator_set.all %}
+                <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>{% include 'includes/comma.html' %}
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="issue-creators">no creators on marvel.com</div>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>

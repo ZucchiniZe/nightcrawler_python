@@ -21,21 +21,6 @@
         </li>
       {% endfor %}
     </ul>
-    {% if is_paginated %}
-      <p>Showing results {{ page_obj.start_index }} - {{ page_obj.end_index }}</p>
-      <div>
-        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
-        |
-        {% for num in paginator.page_range %}
-          {% ifequal num page_obj.number %}
-            <span class="current"><b>{{ num }}</b></span>
-          {% else %}
-            <a href="?page={{ num }}"> {{ num }}</a>
-          {% endifequal %}
-        {% endfor %}
-        |
-        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
-      </div>
-    {% endif %}
+    {% include 'includes/pagination.html' %}
   {% endif %}
 {% endblock %}
