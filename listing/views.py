@@ -38,7 +38,7 @@ class SyncedView(generic.ListView):
 class AllCreatorView(generic.ListView):
     template_name = 'listing/creators.html'
     context_object_name = 'query'
-    paginate_by = 100
+    paginate_by = 155
 
     def get_queryset(self):
         return Creator.objects.all()
