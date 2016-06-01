@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'listing',
+    'tracking',
     'haystack',
     'django_q',
     'opbeat.contrib.django',

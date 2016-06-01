@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^old_search/', include('haystack.urls')),
     url(r'', include('listing.urls', namespace='listing')),
+    url(r'^read/', include('tracking.urls', namespace='tracking')),
 ]

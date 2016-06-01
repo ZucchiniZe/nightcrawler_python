@@ -12,7 +12,6 @@ class Comic(models.Model):
     end = models.IntegerField()
     scraped = models.BooleanField()
     refreshed_at = models.DateTimeField(auto_now=True)
-    # maybe some search field here if possible
 
     @property
     def run(self):
@@ -25,7 +24,7 @@ class Comic(models.Model):
 
     @property
     def issues(self):
-        return self.issue_set.count()
+        return self.issues.count()
 
     @property
     def url(self):
@@ -46,7 +45,7 @@ class Issue(models.Model):
     title = models.CharField(max_length=200)
     link = models.URLField()
     num = models.FloatField(blank=True)
-    comic = models.ForeignKey(Comic)
+    comic = models.ForeignKey(Comic, related_name='issues')
 
     def __str__(self):
         return self.title
@@ -54,6 +53,9 @@ class Issue(models.Model):
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
         return reverse('listing:issue', args=(self.id,))
+
+    def was_read_by(self, user):
+        return bool(self.users.filter(user=user).count())
 
     class Meta:
         ordering = ['num']
