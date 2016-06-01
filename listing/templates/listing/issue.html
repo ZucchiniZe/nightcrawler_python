@@ -10,5 +10,14 @@
       <li><a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a></li>
     {% endfor %}
   </ul>
-  <a href="{{ issue.link }}">read now</a>
+  <a class="read-issue"
+     target="_blank"
+     href="{{ issue.link }}"
+     data-comic="{{ comic.title }}"
+     data-issue="{{ issue.title }}"
+     data-num="{{ issue.num }}">Read now</a>
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'listing/track.js' %}"></script>
 {% endblock %}
