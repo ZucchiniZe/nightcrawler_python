@@ -23,6 +23,7 @@ def import_issues(task):
     for result in results:
         creators = result.pop('creators')
         issue = Issue(comic=comic, **result)
+        issue.save()
 
         for creator in creators:
             del creator['name']
@@ -30,7 +31,6 @@ def import_issues(task):
             c.issues.add(issue)
             c.save()
 
-        issue.save()
 
     analytics.track(str(uuid.uuid4()), 'Refresh Issues', {
         'series': comic.title,
