@@ -17,7 +17,7 @@ class Comic(models.Model):
     @property
     def run(self):
         if self.end is -1:
-            return self.start
+            return str(self.start)
         elif self.end is 0:
             return "{} - Present".format(self.start)
         else:
