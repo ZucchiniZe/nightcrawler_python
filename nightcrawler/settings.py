@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'tracking',
     'haystack',
     'django_q',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.reddit',
+    'django.contrib.sites',
     'opbeat.contrib.django',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -178,3 +185,12 @@ OPBEAT = {
     'APP_ID': '10c2a61210',
     'SECRET_TOKEN': 'fb88ac5a782f33e09260b785b650cfff98df5c1f',
 }
+
+# Django allauth -- easier accounts with social support
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
