@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.twitter',
-    'allauth.socialaccount.providers.reddit',
     'django.contrib.sites',
     'opbeat.contrib.django',
     'django.contrib.admin',
@@ -194,3 +192,5 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_ID = 1
+
+LOGIN_REDIRECT_URL = 'listing:index'
