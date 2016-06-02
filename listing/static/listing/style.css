@@ -22,33 +22,33 @@ body {
   display: inline;
 }
 
-ul.nav {
-  padding: 0 0 0 5px;
-  display: inline;
-}
+/*ul.nav {*/
+  /*padding: 0 0 0 5px;*/
+  /*display: inline;*/
+/*}*/
 
-ul.nav li {
-  font-size: 2em;
-  padding: 0 5px;
-  display: inline;
-}
+/*ul.nav li {*/
+  /*font-size: 2em;*/
+  /*padding: 0 5px;*/
+  /*display: inline;*/
+/*}*/
 
-ul.nav li a {
-  color: blue;
-  text-decoration: none;
-}
+/*ul.nav li a {*/
+  /*color: blue;*/
+  /*text-decoration: none;*/
+/*}*/
 
-ul.nav li a:hover {
-  text-decoration: underline;
-}
+/*ul.nav li a:hover {*/
+  /*text-decoration: underline;*/
+/*}*/
 
-ul.nav li a:visited {
-  color: blue;
-}
+/*ul.nav li a:visited {*/
+  /*color: blue;*/
+/*}*/
 
-ul.nav li.active {
-  text-decoration: underline;
-}
+/*ul.nav li.active {*/
+  /*text-decoration: underline;*/
+/*}*/
 
 h2.title {
   font-size: 1.2em;

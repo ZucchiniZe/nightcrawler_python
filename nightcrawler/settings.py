@@ -184,7 +184,7 @@ OPBEAT = {
     'SECRET_TOKEN': 'fb88ac5a782f33e09260b785b650cfff98df5c1f',
 }
 
-# Django allauth -- easier accounts with social support
+# Django allauth -- easier account with social support
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

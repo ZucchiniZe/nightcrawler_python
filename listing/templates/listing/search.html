@@ -2,10 +2,11 @@
 
 {% block content %}
   <h2>Search</h2>
-  <form method="get">
-    <label for="search">Search:</label>
-    <input id="search" type="text" name="q" value="{{ query }}">
-    <input type="submit" value="Search">
+  <form method="get" class="pure-form">
+    <fieldset>
+      <input id="search" type="text" name="q" value="{{ query }}" placeholder="Search">
+      <input type="submit" value="Search" class="pure-button pure-button-primary">
+    </fieldset>
   </form>
   {% if query %}
     <h3>Found {{ results.count }} Result{{ results.count|pluralize }}</h3>

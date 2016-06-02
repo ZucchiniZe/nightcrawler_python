@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load helpers %}
 
 <!doctype html>
 <head>
@@ -16,20 +17,26 @@
   </script>
 </head>
 <body>
-<div class=page>
+<div class="page">
   <div class="pagetitle">
-    <h1><a class="logo" href="/">
-      <img style="max-height: 0.7em" src="{% static 'listing/nightcrawler.png' %}"/>
-      Nightcrawler
-    </a></h1>
-    {% with request.resolver_match.view_name as url_name %}
-      <ul class="nav">
-        <li{% if url_name == 'listing:listing' %} class="active"{% endif %}><a href="{% url 'listing:listing' %}">comics</a></li>
-        <li{% if url_name == 'listing:synced' %} class="active"{% endif %}><a href="{% url 'listing:synced' %}">synced</a></li>
-        <li{% if url_name == 'listing:creators' %} class="active"{% endif %}><a href="{% url 'listing:creators' %}">creators</a></li>
-        <li{% if url_name == 'listing:search' %} class="active"{% endif %}><a href="{% url 'listing:search' %}">search</a></li>
-      </ul>
-    {% endwith %}
+    <div class="pure-menu pure-menu-horizontal">
+      <a class="logo pure-menu-heading pure-menu-link" href="/">
+        <img style="max-height:0.7em" src="{% static 'listing/nightcrawler.png' %}"/>
+        Nightcrawler
+      </a>
+      {% with request.resolver_match.view_name as url %}
+        <ul class="nav pure-menu-list">
+          <li class="pure-menu-item {{ url|active_link:'listing:listing' }}"><a href="{% url 'listing:listing' %}" class="pure-menu-link">comics</a></li>
+          <li class="pure-menu-item {{ url|active_link:'listing:synced' }}"><a href="{% url 'listing:synced' %}" class="pure-menu-link">synced</a></li>
+          <li class="pure-menu-item {{ url|active_link:'listing:creators' }}"><a href="{% url 'listing:creators' %}" class="pure-menu-link">creators</a></li>
+          <li class="pure-menu-item {{ url|active_link:'listing:search' }}"><a href="{% url 'listing:search' %}" class="pure-menu-link">search</a></li>
+{#          <li{% if url_name == 'listing:listing' %} class="active"{% endif %}><a href="{% url 'listing:listing' %}">comics</a></li>#}
+{#          <li{% if url_name == 'listing:synced' %} class="active"{% endif %}><a href="{% url 'listing:synced' %}">synced</a></li>#}
+{#          <li{% if url_name == 'listing:creators' %} class="active"{% endif %}><a href="{% url 'listing:creators' %}">creators</a></li>#}
+{#          <li{% if url_name == 'listing:search' %} class="active"{% endif %}><a href="{% url 'listing:search' %}">search</a></li>#}
+        </ul>
+      {% endwith %}
+    </div>
   </div>
   {% if messages %}
     <ul class="messages">
@@ -39,6 +46,7 @@
     </ul>
   {% endif %}
   {% block content %}{% endblock %}
-  {% block script %}{% endblock %}
 </div>
+{% block script %}{% endblock %}
+{#<script src="{% static 'listing/pure.js' %}"></script>#}
 </body>
