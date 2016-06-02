@@ -1,5 +1,5 @@
 from lxml import html, etree
-from parse import parse
+import re
 import requests
 
 from haystack import connection_router, connections
@@ -38,7 +38,9 @@ def scrape_issues(data, comic):
             data['id'] = None
 
         if '#' in data['title']:
-            data['num'] = float(parse('{} #{}', data['title'])[-1])
+            rx = re.match('^.*#(\d+)$', data['title'])
+            if rx:
+                data['num'] = float(rx.groups()[0])
         else:
             data['num'] = None
 
@@ -55,28 +57,18 @@ def scrape_issues(data, comic):
 
     return dicts, comic
 
-
 def parse_title(name):
-    years = name.rsplit('(', 1)[1][:-1]
-    if '-' in years:
-        parsed = parse("{} ({:d} - {})", name)
-    else:
-        parsed = parse("{} ({:d})", name)
+    rx = re.search(r'(.*) \((\d{4})(?: -? (\d{4}|Present))?\)', name)
+    if rx:
+        parsed = rx.groups()
+        if parsed[-1] is None:
+            years = (parsed[1], -1)
+        else:
+            years = (parsed[1], (0 if parsed[2] == 'Present' else parsed[2]))
 
-    parsed = list(parsed)
-    data = None
+        years = tuple(int(y) for y in years)
 
-    if len(parsed) >= 3:
-        title = parsed[0]
-        year1 = parsed[1]
-        year2 = parsed[2]
-        data = (title, (year1, (0 if year2 == 'Present' else year2)))
-    elif len(parsed) >= 2:
-        title = parsed[0]
-        year = parsed[1]
-        data = (title, (year, -1))
-    return data
-
+        return (parsed[0], years)
 
 def scrape_titles():
     url = "http://marvel.com/comics/series"
