@@ -16,6 +16,7 @@
       | <a href="{{ comic.url }}">{{ comic.title }} on marvel.com</a>
     </span>
     {% if request.user.is_authenticated %}
+      <br>
       <small>The <span class="yes">✓</span> and <span class="no">✗</span> denote if you have read the issue yet</small>
     {% endif %}
   </div>
