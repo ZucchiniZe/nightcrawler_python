@@ -16,6 +16,12 @@
             {{ field.label_tag }}
             {{ field }}
           </div>
+        {% else %}
+          <div class="hidden">
+            {{ field.errors }}
+            {{ field.label_tag }}
+            {{ field }}
+          </div>
         {% endif %}
       {% endfor %}
       {% if redirect_field_value %}
