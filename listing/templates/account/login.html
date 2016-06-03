@@ -10,11 +10,12 @@
   {% if socialaccount_providers %}
     <p>Please sign in with
       {% for provider in socialaccount_providers %}
-        <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} pure-button pure-button-primary"
+        <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} pure-button"
            href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
           <i class="fa fa-{{ provider.name|lower }}"></i>
           {{provider.name}}</a>{% include 'includes/comma.html' %}
       {% endfor %}
+      warning, your username will be your google name
     </p>
     <p>Or, <a href="{{ signup_url }}">sign up</a>
       for a {{ site.name }} account and click <a class="pure-button pure-button-primary" href="javascript:show_login()">sign in</a></p>
@@ -22,7 +23,7 @@
     <p>If you have not created an account yet, then please
       <a href="{{ signup_url }}">sign up</a> first.</p>
   {% endif %}
-  <form method="post" class="pure-form pure-form-aligned" id="login-form" style="display: none">
+  <form method="post" class="pure-form pure-form-aligned" id="login-form">
     {% csrf_token %}
     <fieldset>
       <legend>Login using username</legend>
@@ -41,18 +42,4 @@
       </div>
     </fieldset>
   </form>
-{% endblock %}
-
-{% block script %}
-  <script>
-    var show_login = function() {
-      form = document.querySelector('#login-form');
-      var display = form.style.display;
-      if (display == 'none') {
-        form.style.display = '';
-      } else {
-        form.style.display = 'none';
-      }
-    }
-  </script>
 {% endblock %}

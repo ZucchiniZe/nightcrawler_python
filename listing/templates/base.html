@@ -33,19 +33,21 @@
           <li class="pure-menu-item {{ url|active_link:'listing:search' }}"><a href="{% url 'listing:search' %}" class="pure-menu-link">search</a></li>
           {% if not request.user.is_authenticated %}
             <li class="pure-menu-item"><a href="{% url 'account_login' %}" class="pure-menu-link">login</a></li>
+            <li class="pure-menu-item"><a href="{% url 'account_signup' %}" class="pure-menu-link">signup</a></li>
           {% else %}
             <li class="pure-menu-item"><a href="{% url 'extras:profile' request.user.id %}" class="pure-menu-link">profile</a></li>
+            <li class="pure-menu-item"><a href="{% url 'account_logout' %}" class="pure-menu-link">logout</a></li>
           {% endif %}
         </ul>
       {% endwith %}
     </div>
   </div>
   {% if messages %}
-    <ul class="messages">
+    <div class="messages">
       {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <div{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
       {% endfor %}
-    </ul>
+    </div>
   {% endif %}
   {% block content %}{% endblock %}
 </div>
