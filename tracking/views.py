@@ -5,8 +5,8 @@ from .models import ReadIssue
 
 
 def read_issue(request, comic_id, issue_id):
-    if not request.user:
-        return HttpResponse('shuold be logged in for this to work, oh well')
+    if not request.user.is_authenticated():
+        return HttpResponse('should be logged in for this to work, oh well')
 
     issue = Issue.objects.get(pk=issue_id)
     read, created = ReadIssue.objects.get_or_create(issue=issue, user=request.user)
