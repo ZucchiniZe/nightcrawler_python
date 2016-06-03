@@ -15,6 +15,10 @@
       <a href="{% url 'listing:refresh_issues' comic.id %}">refresh now</a>
       | <a href="{{ comic.url }}">{{ comic.title }} on marvel.com</a>
     </span>
+    {% if request.user.is_authenticated %}
+      <br>
+      <small>The <span class="yes">✓</span> and <span class="no">✗</span> denote if you have read the issue yet</small>
+    {% endif %}
   </div>
   {% if comic.issues.all|length_is:"0" %}
     {% if comic.scraped %}
@@ -28,7 +32,7 @@
         <li class="issue">
           <div class="issue-info">
             {% if request.user.is_authenticated %}
-              <span class="read-status">{{ issue|was_read_by:request.user|yesno:"r,x" }}</span>
+              <span class="read-status {{ issue|was_read_by:request.user|yesno }}">{{ issue|was_read_by:request.user|yesno:"✓,✗" }}</span>
             {% endif %}
             {{ issue.title }}
             <a class="read-issue"

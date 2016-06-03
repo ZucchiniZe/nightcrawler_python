@@ -23,7 +23,7 @@ class Comic(models.Model):
             return "{} - {}".format(self.start, self.end)
 
     @property
-    def issues(self):
+    def issue_count(self):
         return self.issues.count()
 
     @property

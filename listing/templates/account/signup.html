@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load helpers %}
+
+{% block content %}
+  <h1>Sign Up</h1>
+  <p>Already have an account? Then please <a href="{{ login_url }}">login</a>.</p>
+
+  <form method="post" action="{% url 'account_signup' %}" class="pure-form pure-form-aligned">
+    {% csrf_token %}
+    <fieldset>
+      <legend>Signup</legend>
+      {% for field in form %}
+        {% if not field|widget_type == 'hiddeninput' %}
+          <div class="pure-control-group">
+            {{ field.errors }}
+            {{ field.label_tag }}
+            {{ field }}
+          </div>
+        {% else %}
+          <div class="hidden">
+            {{ field.errors }}
+            {{ field.label_tag }}
+            {{ field }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <div class="pure-controls">
+        <button type="submit" class="pure-button pure-button-primary">Sign up</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

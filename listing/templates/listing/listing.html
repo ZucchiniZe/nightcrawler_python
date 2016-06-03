@@ -13,7 +13,7 @@
     <ul class="titles">
       {% for comic in query %}
         <li>
-          <h2>
+          <h2 class="title">
             <span class="scraped {{ comic.scraped|yesno }}">{{ comic.scraped|yesno:"✓,✗" }}</span>
             <a href="{% url 'listing:comic' comic.id %}">{{ comic.title }}</a>
           </h2>

@@ -8,10 +8,8 @@ from .tasks import scrape_issues
 from .hooks import import_issues
 
 
-
-
 class ComicAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'issues', 'run', 'scraped', 'refreshed_at')
+    list_display = ('id', 'title', 'issue_count', 'run', 'scraped', 'refreshed_at')
     list_filter = ('scraped', 'refreshed_at')
     search_fields = ('title',)
     actions = ['scrape_issues']

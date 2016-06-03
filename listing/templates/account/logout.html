@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+  <h1>Sign Out</h1>
+
+  <p>Are you sure you want to sign out?</p>
+
+  <form action="{% url 'account_logout' %}" method="post">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button type="submit" class="pure-button pure-button-primary">Yes</button>
+    <button class="pure-button" onclick="window.history.back()"
+            style="color: white; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); background: rgb(202, 60, 60);">No</button>
+  </form>
+{% endblock %}

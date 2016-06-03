@@ -1,4 +1,6 @@
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.models import User
+from django.shortcuts import render
 
 from listing.models import Issue
 from .models import ReadIssue
@@ -25,4 +27,9 @@ def my_read(request):
     reads = ReadIssue.objects.filter(user=request.user)
 
 
+def profile(request, pk):
+    user = User.objects.get(pk=pk)
 
+    reads = ReadIssue.objects.filter(user=user)
+
+    return render(request, 'extras/profile.html', {'user': user, 'reads': reads})
