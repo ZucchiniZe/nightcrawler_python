@@ -31,10 +31,11 @@
           <li class="pure-menu-item {{ url|active_link:'listing:synced' }}"><a href="{% url 'listing:synced' %}" class="pure-menu-link">synced</a></li>
           <li class="pure-menu-item {{ url|active_link:'listing:creators' }}"><a href="{% url 'listing:creators' %}" class="pure-menu-link">creators</a></li>
           <li class="pure-menu-item {{ url|active_link:'listing:search' }}"><a href="{% url 'listing:search' %}" class="pure-menu-link">search</a></li>
-{#          <li{% if url_name == 'listing:listing' %} class="active"{% endif %}><a href="{% url 'listing:listing' %}">comics</a></li>#}
-{#          <li{% if url_name == 'listing:synced' %} class="active"{% endif %}><a href="{% url 'listing:synced' %}">synced</a></li>#}
-{#          <li{% if url_name == 'listing:creators' %} class="active"{% endif %}><a href="{% url 'listing:creators' %}">creators</a></li>#}
-{#          <li{% if url_name == 'listing:search' %} class="active"{% endif %}><a href="{% url 'listing:search' %}">search</a></li>#}
+          {% if not request.user.is_authenticated %}
+            <li class="pure-menu-item"><a href="{% url 'account_login' %}" class="pure-menu-link">login</a></li>
+          {% else %}
+            <li class="pure-menu-item"><a href="{% url 'extras:profile' request.user.id %}" class="pure-menu-link">profile</a></li>
+          {% endif %}
         </ul>
       {% endwith %}
     </div>

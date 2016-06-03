@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'listing',
-    'tracking',
+    'extras',
     'haystack',
     'django_q',
     'allauth',
