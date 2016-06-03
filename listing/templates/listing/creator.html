@@ -6,11 +6,16 @@
   <h2>{{ creator.name }}</h2>
   <p>This page only shows the currently synced issues, so data may not be fully accurate.</p>
   <div class="creator-info"><a href="{{ creator.url }}">{{ creator.name }} on marvel.com</a></div>
+  {% regroup creator.issues.all|dictsort:"comic.title" by comic as comics %}
   <ul>
-    {% for issue in creator.issues.all %}
-      <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a> <a href="{{ issue.link }}">read now</a></li>
-    {% empty %}
-      <p>{{ creator.name }} has no synced issues, <a href="{% url 'listing:search' %}">go</a> find some</p>
+    {% for comic in comics %}
+      <li><a href="{% url 'listing:comic' comic.grouper.id %}">{{ comic.grouper.title }} ({{ comic.grouper.run }})</a>
+        <ul>
+          {% for issue in comic.list %}
+            <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}

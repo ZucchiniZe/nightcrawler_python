@@ -118,3 +118,7 @@ li.issue a {
 .message.success {
   background: rgb(28, 184, 65);
 }
+
+.message.info {
+  background: rgb(66, 184, 221);
+}
