@@ -9,9 +9,7 @@ register = Library()
 def active_link(url, path):
     if url == path:
         return "pure-menu-active"
-    else:
-        pass
-
+    return ""
 
 def silence_without_field(fn):
     def wrapped(field, attr):

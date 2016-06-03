@@ -81,11 +81,11 @@ h2.title {
   margin-bottom: 0;
 }
 
-.scraped.yes {
+.yes {
   color: green;
 }
 
-.scraped.no {
+.no {
   color: red;
 }
 
