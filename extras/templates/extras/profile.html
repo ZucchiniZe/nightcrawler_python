@@ -4,7 +4,7 @@
 {% block content %}
   <h1>{{ user.username }}'s Profile</h1>
   <p>Comics {{ user.username }} has read:</p>
-  {% regroup reads by issue.comic as read_list %}
+  {% regroup reads|dictsort:"issue.comic.title" by issue.comic as read_list %}
   <ul>
     {% for comic in read_list %}
       <li><a href="{% url 'listing:comic' comic.grouper.id %}">{{ comic.grouper.title }} ({{ comic.grouper.run }})</a>
