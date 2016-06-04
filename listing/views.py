@@ -34,6 +34,11 @@ class SyncedView(generic.ListView):
     def get_queryset(self):
         return Comic.objects.filter(scraped=True)
 
+    def get_context_data(self, **kwargs):
+        context = super(SyncedView, self).get_context_data(**kwargs)
+        context['synced'] = True
+        return context
+
 
 class AllCreatorView(generic.ListView):
     template_name = 'listing/creators.html'
