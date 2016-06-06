@@ -19,7 +19,7 @@ class ReadIssue(models.Model):
 class Playlist(models.Model):
     title = models.CharField(max_length=200)
     items = models.ManyToManyField(Issue, through='PlaylistItem')
-    creator = models.ForeignKey(User, related_name='playlist')
+    creator = models.ForeignKey(User, related_name='playlists')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
