@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from listing.models import Issue
+from listing.models import Comic, Issue
 
 
 class ReadIssue(models.Model):
@@ -12,3 +12,10 @@ class ReadIssue(models.Model):
 
     class Meta:
         ordering = ['user']
+
+
+class Playlist(models.Model):
+    title = models.CharField(max_length=200)
+    comics = models.ManyToManyField(Comic, related_name='playlists')
+    creator = models.ForeignKey(User, related_name='playlist')
+    created_at = models.DateTimeField(auto_now_add=True)
