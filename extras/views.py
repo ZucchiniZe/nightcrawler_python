@@ -1,7 +1,11 @@
+import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views import generic
+
+from haystack.query import SearchQuerySet
+from haystack.inputs import Raw
 
 from listing.models import Issue
 from .models import ReadIssue, Playlist
@@ -38,3 +42,13 @@ class PlaylistView(generic.DetailView):
     model = Playlist
     template_name = 'extras/playlist_detail.html'
 
+
+def search_issues(request):
+    results = SearchQuerySet().filter(type='issue', content=Raw(request.GET.get('q', '')))
+    data = list(map(lambda x: dict(id=int(x.pk), **x.get_stored_fields()), results))
+    return JsonResponse(data, safe=False)
+
+
+def edit_playlist(request, pk):
+    playlist = Playlist.objects.get(pk=pk)
+    return render(request, 'extras/playlist_edit.html', {'playlist': playlist})

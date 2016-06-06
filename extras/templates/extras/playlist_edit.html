@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Editing {{ playlist.title }}{% endblock %}
+
+{% block content %}
+  <h1>Editing {{ playlist.title }}</h1>
+  <form class="pure-form" id="search-form">
+    <fieldset>
+      <label for="issue-search">
+        add issues to playlist: <input type="text" id="issue-search" placeholder="search issues (use specific numbers)" size="30">
+      </label>
+    </fieldset>
+  </form>
+  <ul class="results">
+  </ul>
+{% endblock %}
+
+{% block script %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script>
+    function debounce(fn, duration) {
+      var timer;
+      return function() {
+        clearTimeout(timer);
+        timer = setTimeout(fn, duration)
+      }
+    }
+
+    $('#search-form').submit(function(e){e.preventDefault();});
+
+    $('#issue-search').keyup(debounce(function (e) {
+      var search = $('#issue-search').val();
+      var $results = $('ul.results');
+      $.ajax({
+        url: '/api/issue/search',
+        type: 'get',
+        data: {
+          q: search
+        }
+      }).done(function (data) {
+        if (data.length > 0) {
+          $results.empty();
+          data.forEach(function(issue, i ,a) {
+            $results.append('<li>'+issue.text+' <a href="#" class="search-result" data-id="'+issue.id+'">add</a></li>');
+          });
+        } else {
+          $results.empty();
+          $results.append('<p>No results, try a different search</p>')
+        }
+      })
+    }, 250));
+
+    $('search-result').on('click', function (e) {
+
+    });
+  </script>
+{% endblock %}
