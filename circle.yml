@@ -1,0 +1,5 @@
+machine:
+  timezone:
+    America/Los_Angeles
+  python:
+    version: 3.5.1
