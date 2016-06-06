@@ -3,37 +3,45 @@ from django.test import TestCase
 from .models import Comic, Issue, Creator
 
 
-class ComicTestCase(TestCase):
+class ComicTest(TestCase):
     def setUp(self):
-        with_issues = Comic(title='Lean mean meme machine', start=2016, end=0, scraped=False)
-        with_issues.save()
+        self.with_issues = Comic.objects.create(title='Lean mean meme machine', start=2016, end=0,
+                                                scraped=False, id=0)
 
-        everest = Comic(title='1602: Everest', start=2011, end=-1, scraped=False)
-        everest.save()
-        tumber = Comic(title='Tumber Survey', start=2014, end=2016, scraped=False).save()
+        self.everest = Comic.objects.create(title='1602: Everest', start=2011, end=-1,
+                                            scraped=False, id=1243)
 
-        everest_issue = Issue(title='1602: Everest #1', link='http://wiki.alexb.io', num=1)
-        everest_issue.comic = everest
-        everest_issue.save()
+        self.tumber = Comic.objects.create(title='Tumber Survey', start=2014, end=2016,
+                                           scraped=False, id=2)
 
-        first_issue = Issue(title='Lean mean meme machine #1', link='http://app.mysummitps.org', num=1)
-        first_issue.comic = with_issues
-        first_issue.save()
+        Issue.objects.create(title='1602: Everest #1', link='http://wiki.alexb.io',
+                             num=1, comic=self.everest)
 
-        second_issue = Issue(title='Learn mean meme machine #2', link='http://google.com/#q=everest+scandals', num=2)
-        second_issue.comic = with_issues
-        second_issue.save()
+        Issue.objects.create(title='Lean mean meme machine #1', link='http://app.mysummitps.org',
+                             num=1, comic=self.with_issues)
+
+        Issue.objects.create(title='Learn mean meme machine #2', link='http://google.com/#q=everest+scandals',
+                             num=2, comic=self.with_issues)
 
     def test_comic_run_length(self):
-        current_comic = Comic.objects.get(title='Lean mean meme machine')
-        old_comic = Comic.objects.get(title='1602: Everest')
-        full_comic = Comic.objects.get(title='Tumber Survey')
-        self.assertEqual(current_comic.run, '2016 - Present')
-        self.assertEqual(old_comic.run, '2011')
-        self.assertEqual(full_comic.run, '2014 - 2016')
+        self.assertEqual(self.with_issues.run, '2016 - Present')
+        self.assertEqual(self.everest.run, '2011')
+        self.assertEqual(self.tumber.run, '2014 - 2016')
 
-    def test_comic_current_issues(self):
-        single = Comic.objects.get(title='1602: Everest')
-        double = Comic.objects.get(title='Lean mean meme machine')
-        self.assertEqual(single.issues, 1)
-        self.assertEqual(double.issues, 2)
+    def test_comic_current_issue_count(self):
+        self.assertEqual(self.everest.issue_count, 1)
+        self.assertEqual(self.with_issues.issue_count, 2)
+
+    def test_comic_url(self):
+        self.assertEqual(self.tumber.url, 'http://marvel.com/comics/series/2/Tumber Survey')
+        self.assertEqual(self.everest.url, 'http://marvel.com/comics/series/1243/1602: Everest')
+
+
+class IssueTest(TestCase):
+    def setUp(self):
+        pass
+
+
+class CreatorTest(TestCase):
+    def setUp(self):
+        pass
