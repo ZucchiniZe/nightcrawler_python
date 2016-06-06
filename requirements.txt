@@ -1,6 +1,7 @@
 analytics-python==1.2.3
 arrow==0.7.0
 blessed==1.14.1
+coverage==4.1
 defusedxml==0.4.1
 dj-database-url==0.4.1
 Django==1.9.6

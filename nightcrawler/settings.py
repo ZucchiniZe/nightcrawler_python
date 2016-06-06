@@ -204,3 +204,5 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 # Django nose -- test runner with auto xunit output
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = ['--with-coverage', '--cover-package=listing,extras,nightcrawler']
