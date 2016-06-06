@@ -20,6 +20,7 @@ class Playlist(models.Model):
     title = models.CharField(max_length=200)
     items = models.ManyToManyField(Issue, through='PlaylistItem')
     creator = models.ForeignKey(User, related_name='playlists')
+    description = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

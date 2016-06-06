@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}All Playlists{% endblock %}
+
+{% block content %}
+  <h1>All Playlists</h1>
+  <ul>
+    {% for playlist in object_list %}
+      <li><a href="{% url 'extras:playlist' playlist.id %}">{{ playlist.title }}</a> - {{ playlist.creator.username }}</li>
+    {% endfor %}
+  </ul>
+  {% include 'includes/pagination.html' %}
+{% endblock %}
