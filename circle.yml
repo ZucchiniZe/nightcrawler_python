@@ -2,7 +2,7 @@ machine:
   timezone:
     America/Los_Angeles
   python:
-    version: 3.5.1
+    version: 3.4.3
   services:
     - redis
     - elasticsearch
