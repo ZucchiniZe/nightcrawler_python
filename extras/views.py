@@ -9,6 +9,7 @@ from haystack.inputs import Raw
 
 from listing.models import Issue
 from .models import ReadIssue, Playlist
+from .forms import PlaylistForm
 
 
 def read_issue(request, comic_id, issue_id):
@@ -51,4 +52,5 @@ def search_issues(request):
 
 def edit_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
-    return render(request, 'extras/playlist_edit.html', {'playlist': playlist})
+    form = PlaylistForm(instance=playlist)
+    return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'form': form})

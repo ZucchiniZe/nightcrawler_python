@@ -1,57 +1,55 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block title %}Editing {{ playlist.title }}{% endblock %}
 
 {% block content %}
-  <h1>Editing {{ playlist.title }}</h1>
-  <form class="pure-form" id="search-form">
-    <fieldset>
-      <label for="issue-search">
-        add issues to playlist: <input type="text" id="issue-search" placeholder="search issues (use specific numbers)" size="30">
-      </label>
-    </fieldset>
-  </form>
-  <ul class="results">
-  </ul>
+{#  <h1>Editing {{ playlist.title }}</h1>#}
+{#  <form class="pure-form pure-form-aligned" id="search-form">#}
+{#    {% csrf_token %}#}
+{#    <fieldset>#}
+{#      {% for field in form %}#}
+{#        <div class="pure-control-group">#}
+{#          {{ field.errors }}#}
+{#          {{ field.label_tag }}#}
+{#          {{ field }}#}
+{#        </div>#}
+{#      {% endfor %}#}
+{#      <div class="pure-control-group">#}
+{#        <label for="issue-search">add issues to playlist: </label>#}
+{#        <input type="text" id="issue-search" placeholder="search issues (use specific numbers)" size="30">#}
+{#      </div>#}
+{#    </fieldset>#}
+{#  </form>#}
+{#  <ul class="selected-items"></ul>#}
+{#  <ul class="results"></ul>#}
+
+  <div id="playlist-app">
+    {% verbatim %}
+    <input v-model="q" debounce="250">
+    <p>{{ searchTerm }}</p>
+    <ul>
+      <li v-for="issue in searchResults">
+        {{ issue.text }}
+        <a href="/issue/{{ issue.id }}/" v-on:click.prevent="addIssue(issue)">add</a>
+      </li>
+    </ul>
+
+    <p>added issues</p>
+    <ul>
+      <li v-for="issue in issues">
+        <a href="javascript:void(0)" v-on:click="moveIssueUp($index)">&uarr;</a>
+        <a href="javascript:void(0)" v-on:click="moveIssueDown($index)">&darr;</a>
+        {{ issue.text }}
+        <a href="javascript:void(0)" v-on:click="removeIssue($index)">remove</a>
+      </li>
+    </ul>
+    {% endverbatim %}
+  </div>
 {% endblock %}
 
 {% block script %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-  <script>
-    function debounce(fn, duration) {
-      var timer;
-      return function() {
-        clearTimeout(timer);
-        timer = setTimeout(fn, duration)
-      }
-    }
-
-    $('#search-form').submit(function(e){e.preventDefault();});
-
-    $('#issue-search').keyup(debounce(function (e) {
-      var search = $('#issue-search').val();
-      var $results = $('ul.results');
-      $.ajax({
-        url: '/api/issue/search',
-        type: 'get',
-        data: {
-          q: search
-        }
-      }).done(function (data) {
-        if (data.length > 0) {
-          $results.empty();
-          data.forEach(function(issue, i ,a) {
-            $results.append('<li>'+issue.text+' <a href="#" class="search-result" data-id="'+issue.id+'">add</a></li>');
-          });
-        } else {
-          $results.empty();
-          $results.append('<p>No results, try a different search</p>')
-        }
-      })
-    }, 250));
-
-    $('search-result').on('click', function (e) {
-
-    });
-  </script>
+  <script src="{% static 'extras/vue.min.js' %}"></script>
+  <script src="{% static 'extras/playlist.js' %}"></script>
 {% endblock %}
