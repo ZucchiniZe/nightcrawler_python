@@ -23,33 +23,36 @@
 {#  </form>#}
 {#  <ul class="selected-items"></ul>#}
 {#  <ul class="results"></ul>#}
-
-  <div id="playlist-app">
-    {% verbatim %}
-    <input v-model="q" debounce="250">
+  {% verbatim %}
+  <div id="playlist-app" xmlns:v-on="http://www.w3.org/1999/xhtml">
+    <form class="pure-form">
+      <input v-model="q" debounce="250" placeholder="search for issues (use specific numbers)" size="30">
+    </form>
     <p>{{ searchTerm }}</p>
     <ul>
       <li v-for="issue in searchResults">
-        {{ issue.text }}
-        <a href="/issue/{{ issue.id }}/" v-on:click.prevent="addIssue(issue)">add</a>
+        {{ issue.title }}
+        <a href="#" v-on:click.prevent="addIssue(issue)">add</a>
       </li>
     </ul>
 
-    <p>added issues</p>
-    <ul>
-      <li v-for="issue in issues">
-        <a href="javascript:void(0)" v-on:click="moveIssueUp($index)">&uarr;</a>
-        <a href="javascript:void(0)" v-on:click="moveIssueDown($index)">&darr;</a>
-        {{ issue.text }}
-        <a href="javascript:void(0)" v-on:click="removeIssue($index)">remove</a>
+    <p>added issues (drag to re-order)</p>
+    <ul v-droper="issues" >
+      <li v-dragable v-for="issue in issues">
+        {{ issue.title }}
+        <a href="#" v-on:click.prevent="removeIssue($index)">remove</a>
       </li>
     </ul>
-    {% endverbatim %}
   </div>
+  {% endverbatim %}
 {% endblock %}
 
 {% block script %}
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script>
+    window.items = JSON.parse("{{ items }}".replace(/&quot;/g, '"')).map(function(element) { return element.fields; })
+  </script>
+  <script src="{% static 'extras/jquery.js' %}"></script>
   <script src="{% static 'extras/vue.min.js' %}"></script>
+  <script src="{% static 'extras/vue-sortable.js' %}"></script>
   <script src="{% static 'extras/playlist.js' %}"></script>
 {% endblock %}

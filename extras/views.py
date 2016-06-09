@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views import generic
+from django.core.serializers import serialize
 
 from haystack.query import SearchQuerySet
 from haystack.inputs import Raw
@@ -53,4 +54,5 @@ def search_issues(request):
 def edit_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
     form = PlaylistForm(instance=playlist)
-    return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'form': form})
+    items = serialize('json', playlist.items.all())
+    return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'form': form, 'items': items})
