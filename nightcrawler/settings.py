@@ -70,7 +70,7 @@ ROOT_URLCONF = 'nightcrawler.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -203,4 +203,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Django nose -- test runner with auto xunit output
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+if os.environ.get('TEST', False):
+    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+    NOSE_ARGS = ['--with-coverage', '--cover-package=listing,extras,nightcrawler']

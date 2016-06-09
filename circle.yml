@@ -6,3 +6,10 @@ machine:
   services:
     - redis
     - elasticsearch
+  environment:
+    DEBUG: 1
+    TEST: 1
+
+test:
+  post:
+    - pip install codecov && codecov

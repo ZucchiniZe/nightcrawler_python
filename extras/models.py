@@ -14,6 +14,7 @@ class ReadIssue(models.Model):
 
     class Meta:
         ordering = ['user']
+        index_together = ['user', 'issue']
 
 
 class Playlist(models.Model):

@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from .models import Comic, Issue, Creator
+from .tasks import get_url
 
 
 class ComicTest(TestCase):
@@ -45,3 +46,11 @@ class IssueTest(TestCase):
 class CreatorTest(TestCase):
     def setUp(self):
         pass
+
+
+class TaskTest(TestCase):
+    def test_get_url(self):
+        all = get_url(1, 'test', all=True)
+        some = get_url(1, 'test', all=False)
+        self.assertEqual(all, 'http://marvel.com/comics/series/1/test?offset=0&orderBy=release_date+asc&byId=1&totalcount=10000')
+        self.assertEqual(some, 'http://marvel.com/comics/series/1/test')
