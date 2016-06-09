@@ -9,7 +9,7 @@ from haystack.query import SearchQuerySet
 from haystack.inputs import Raw
 
 from listing.models import Issue
-from .models import ReadIssue, Playlist
+from .models import ReadIssue, Playlist, PlaylistItem
 from .forms import PlaylistForm
 
 
@@ -53,6 +53,10 @@ def search_issues(request):
 
 def edit_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
-    form = PlaylistForm(instance=playlist)
+    form = PlaylistForm(request.POST or None, instance=playlist)
+    if form.is_valid():
+        for item in request.POST.getlist('items'):
+            pitem, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=Issue.objects.get(pk=item))
+            pitem.save()
     items = serialize('json', playlist.items.all())
     return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'form': form, 'items': items})

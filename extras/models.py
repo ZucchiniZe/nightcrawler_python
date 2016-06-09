@@ -30,5 +30,8 @@ class PlaylistItem(OrderedModel):
     playlist = models.ForeignKey(Playlist)
     order_with_respect_to = 'playlist'
 
+    def __str__(self):
+        return "I{} P{}".format(self.issue.id, self.playlist.id)
+
     class Meta(OrderedModel.Meta):
         pass

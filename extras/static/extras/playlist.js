@@ -39,6 +39,13 @@ var app = new Vue({
     },
     removeIssue: function(index) {
       this.issues.splice(index, 1)
-    },
+    }
   }
 });
+
+/*
+  django form uses post request with regular named params
+  example params
+  ?title=a%2Bx&description=a%2Bx+reading+order&items=27911&items=28150&items=31720&items=576
+  items is repeated as many times there are issues with the issue's id
+ */

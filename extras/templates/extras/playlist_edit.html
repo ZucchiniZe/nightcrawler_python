@@ -1,57 +1,61 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load helpers %}
 
 {% block title %}Editing {{ playlist.title }}{% endblock %}
 
 {% block content %}
-{#  <h1>Editing {{ playlist.title }}</h1>#}
-{#  <form class="pure-form pure-form-aligned" id="search-form">#}
-{#    {% csrf_token %}#}
-{#    <fieldset>#}
-{#      {% for field in form %}#}
-{#        <div class="pure-control-group">#}
-{#          {{ field.errors }}#}
-{#          {{ field.label_tag }}#}
-{#          {{ field }}#}
-{#        </div>#}
-{#      {% endfor %}#}
-{#      <div class="pure-control-group">#}
-{#        <label for="issue-search">add issues to playlist: </label>#}
-{#        <input type="text" id="issue-search" placeholder="search issues (use specific numbers)" size="30">#}
-{#      </div>#}
-{#    </fieldset>#}
-{#  </form>#}
-{#  <ul class="selected-items"></ul>#}
-{#  <ul class="results"></ul>#}
-  {% verbatim %}
   <div id="playlist-app" xmlns:v-on="http://www.w3.org/1999/xhtml">
-    <form class="pure-form">
-      <input v-model="q" debounce="250" placeholder="search for issues (use specific numbers)" size="30">
+    <h1>Editing {{ playlist.title }}</h1>
+    <form method="post" class="pure-form pure-form-aligned">
+      {% csrf_token %}
+      <fieldset>
+        {% for field in form %}
+          {% if field|widget_type != 'hiddeninput' %}
+            <div class="pure-control-group">
+              {{ field.errors }}
+              {{ field.label_tag }}
+              {{ field }}
+            </div>
+          {% endif %}
+        {% endfor %}
+        <div class="pure-control-group">
+          <label for="issue-search">add issues:</label>
+          <input id="issue-search" v-model="q" debounce="250" placeholder="search for issues (use specific numbers)" size="30">
+        </div>
+        <div class="pure-controls">
+          <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        </div>
+      </fieldset>
     </form>
-    <p>{{ searchTerm }}</p>
     <ul>
+      {% verbatim %}
       <li v-for="issue in searchResults">
         {{ issue.title }}
-        <a href="#" v-on:click.prevent="addIssue(issue)">add</a>
+        <a href="#" @click.prevent="addIssue(issue)">add</a>
       </li>
+      {% endverbatim %}
     </ul>
 
-    <p>added issues (drag to re-order)</p>
-    <ul v-droper="issues" >
-      <li v-dragable v-for="issue in issues">
-        {{ issue.title }}
-        <a href="#" v-on:click.prevent="removeIssue($index)">remove</a>
-      </li>
-    </ul>
+    <template v-if="issues.length > 0">
+      <p>added issues (drag to re-order)</p>
+      <ul v-droper="issues">
+        {% verbatim %}
+        <li v-dragable v-for="issue in issues">
+          {{ issue.title }}
+          <a href="#" @click.prevent="removeIssue($index)">remove</a>
+        </li>
+        {% endverbatim %}
+      </ul>
+    </template>
   </div>
-  {% endverbatim %}
 {% endblock %}
 
 {% block script %}
-  <script>
-    window.items = JSON.parse("{{ items }}".replace(/&quot;/g, '"')).map(function(element) { return element.fields; })
-  </script>
   <script src="{% static 'extras/jquery.js' %}"></script>
+  <script>
+    window.items = JSON.parse("{{ items }}".replace(/&quot;/g, '"')).map(function(element) { return $.extend(element.fields, {id: element.pk}); })
+  </script>
   <script src="{% static 'extras/vue.min.js' %}"></script>
   <script src="{% static 'extras/vue-sortable.js' %}"></script>
   <script src="{% static 'extras/playlist.js' %}"></script>

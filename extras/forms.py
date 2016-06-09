@@ -8,5 +8,6 @@ class PlaylistForm(forms.ModelForm):
         model = Playlist
         fields = ('title', 'description', 'items')
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 5})
+            'description': forms.Textarea(attrs={'rows': 5}),
+            # 'items': forms.HiddenInput()
         }
