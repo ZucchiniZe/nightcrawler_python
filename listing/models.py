@@ -44,7 +44,7 @@ class Comic(models.Model):
 class Issue(models.Model):
     title = models.CharField(max_length=200)
     link = models.URLField()
-    num = models.FloatField(blank=True)
+    num = models.FloatField(blank=True, null=True)
     comic = models.ForeignKey(Comic, related_name='issues')
 
     def __str__(self):
