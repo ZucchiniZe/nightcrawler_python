@@ -61,14 +61,10 @@ var app = new Vue({
       this.issues.splice(index, 1)
     },
     sendForm: function() {
-      this.$http({
-        url: '{?title,description,items*}',
-        method: 'post',
-        data: {
-          title: this.title,
-          description: this.description,
-          items: this.ids
-        }
+      this.$http.post('.', {
+        title: this.title,
+        description: this.description,
+        items: this.ids
       }).then(function(res) {
         if (res.data.status == 'ok') {
           this.flash('success', this.title + ' has been updated', 2000);
@@ -77,10 +73,3 @@ var app = new Vue({
     }
   }
 });
-
-/*
-  django form uses post request with regular named params
-  example params
-  ?title=a%2Bx&description=a%2Bx+reading+order&items=27911&items=28150&items=31720&items=576
-  items is repeated as many times there are issues with the issue's id
- */
