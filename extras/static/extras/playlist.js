@@ -1,24 +1,31 @@
+Vue.http.headers.common['X-CSRFToken'] = Cookies.get('csrftoken');
+// Vue.http.options.emulateJSON = true;
+
 var app = new Vue({
   el: '#playlist-app',
   data: {
+    title: window.data.title || '',
+    description: window.data.description || '',
+    issues: window.data.items || [],
     q: '',
-    issues: window.items,
     searchResults: []
   },
   watch: {
     'q': 'search'
   },
+  computed: {
+    ids: function() {
+      return this.issues.map(function(issue) {
+        return issue.id
+      })
+    }
+  },
   methods: {
     search: function(term) {
       var search = term.trim();
       if (search !== "") {
-        $.ajax({
-          url: '/api/issue/search',
-          type: 'get',
-          data: {
-            q: search
-          }
-        }).done(function (data) {
+        this.$http.get('/api/issue/search', {q: search}).then(function (response) {
+          var data = response.data;
           if (data.length > 0) {
             // elasticsearch returns text instead of title, lets change that
             this.searchResults = data.map(function (element) {
@@ -34,11 +41,30 @@ var app = new Vue({
         this.searchResults = []
       }
     },
-    addIssue: function(issue) {
-      this.issues.push(issue)
+    addIssue: function(newIssue) {
+      var exists = false;
+      this.issues.map(function(issue) {
+        if (issue.id === newIssue.id) {
+          exists = true;
+        }
+      }.bind(this));
+      if (!exists) {
+        this.issues.push(newIssue);
+      }
     },
     removeIssue: function(index) {
       this.issues.splice(index, 1)
+    },
+    sendForm: function() {
+      this.$http({
+        url: '{?title,description,items*}',
+        method: 'post',
+        data: {
+          title: this.title,
+          description: this.description,
+          items: this.ids
+        }
+      });
     }
   }
 });

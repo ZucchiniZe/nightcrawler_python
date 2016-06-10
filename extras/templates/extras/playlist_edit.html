@@ -5,22 +5,21 @@
 {% block title %}Editing {{ playlist.title }}{% endblock %}
 
 {% block content %}
-  <div id="playlist-app" xmlns:v-on="http://www.w3.org/1999/xhtml">
-    <h1>Editing {{ playlist.title }}</h1>
-    <form method="post" class="pure-form pure-form-aligned">
-      {% csrf_token %}
+  {% verbatim %}
+  <div id="playlist-app">
+    <h1>Editing {{ title }}</h1>
+    <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
       <fieldset>
-        {% for field in form %}
-          {% if field|widget_type != 'hiddeninput' %}
-            <div class="pure-control-group">
-              {{ field.errors }}
-              {{ field.label_tag }}
-              {{ field }}
-            </div>
-          {% endif %}
-        {% endfor %}
         <div class="pure-control-group">
-          <label for="issue-search">add issues:</label>
+          <label for="title">title: </label>
+          <input id="title" v-model="title">
+        </div>
+        <div class="pure-control-group">
+          <label for="desc">description: </label>
+          <textarea id="desc" rows="5" cols="40" v-model="description"></textarea>
+        </div>
+        <div class="pure-control-group">
+          <label for="issue-searchsue">issues: </label>
           <input id="issue-search" v-model="q" debounce="250" placeholder="search for issues (use specific numbers)" size="30">
         </div>
         <div class="pure-controls">
@@ -29,34 +28,39 @@
       </fieldset>
     </form>
     <ul>
-      {% verbatim %}
       <li v-for="issue in searchResults">
         {{ issue.title }}
         <a href="#" @click.prevent="addIssue(issue)">add</a>
       </li>
-      {% endverbatim %}
     </ul>
 
     <template v-if="issues.length > 0">
       <p>added issues (drag to re-order)</p>
       <ul v-droper="issues">
-        {% verbatim %}
         <li v-dragable v-for="issue in issues">
           {{ issue.title }}
           <a href="#" @click.prevent="removeIssue($index)">remove</a>
         </li>
-        {% endverbatim %}
       </ul>
     </template>
   </div>
+  {% endverbatim %}
 {% endblock %}
 
 {% block script %}
-  <script src="{% static 'extras/jquery.js' %}"></script>
   <script>
-    window.items = JSON.parse("{{ items }}".replace(/&quot;/g, '"')).map(function(element) { return $.extend(element.fields, {id: element.pk}); })
+    window.data = {
+      title: '{{ playlist.title }}',
+      description: '{{ playlist.description }}',
+      items: {{ items|safe }}.map(function(element) {
+        var ids = {id: element.pk};
+        for (var attr in ids) { element.fields[attr] = ids[attr] }
+        return element.fields;
+      })
+    };
   </script>
+  <script src="{% static 'extras/cookie.js' %}"></script>
   <script src="{% static 'extras/vue.min.js' %}"></script>
-  <script src="{% static 'extras/vue-sortable.js' %}"></script>
+  <script src="{% static 'extras/vue-deps.js' %}"></script>
   <script src="{% static 'extras/playlist.js' %}"></script>
 {% endblock %}

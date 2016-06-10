@@ -53,23 +53,26 @@ def search_issues(request):
 
 def edit_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
-    form = PlaylistForm(request.POST or None, instance=playlist)
 
-    if form.is_valid():
-        clean_data = {
-            'title': form.cleaned_data.get('title'),
-            'description': form.cleaned_data.get('description'),
-            'creator': request.user,
-        }
+    if request.is_ajax() and request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        form = PlaylistForm(data)
+        if form.is_valid():
+            clean_data = {
+                'title': form.cleaned_data.get('title'),
+                'description': form.cleaned_data.get('description'),
+                'creator': request.user,
+            }
+            print(clean_data)
+            playlist = Playlist(pk=playlist.pk, created_at=playlist.created_at, **clean_data)
+            playlist.save()
 
-        playlist = Playlist(pk=playlist.pk, created_at= playlist.created_at, **clean_data)
-        playlist.save()
-
-        # playlist.items.all().delete()
-        for item in request.POST.getlist('items'):
-            pitem, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=Issue.objects.get(pk=item))
-            pitem.save()
+            PlaylistItem.objects.filter(playlist=playlist).delete()
+            for item in form.cleaned_data.get('items'):
+                print(item)
+                pitem, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=item)
+                pitem.save()
 
     items = serialize('json', playlist.items.all())
 
-    return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'form': form, 'items': items})
+    return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'items': items})
