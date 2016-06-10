@@ -7,6 +7,11 @@
 {% block content %}
   {% verbatim %}
   <div id="playlist-app">
+    <div class="messages" v-if="messages.length > 0">
+      <div v-for="message in messages" class="message" :class="message.type">
+        {{ message.text }}
+      </div>
+    </div>
     <h1>Editing {{ title }}</h1>
     <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
       <fieldset>

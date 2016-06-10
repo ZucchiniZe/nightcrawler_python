@@ -63,15 +63,15 @@ def edit_playlist(request, pk):
                 'description': form.cleaned_data.get('description'),
                 'creator': request.user,
             }
-            print(clean_data)
             playlist = Playlist(pk=playlist.pk, created_at=playlist.created_at, **clean_data)
             playlist.save()
 
             PlaylistItem.objects.filter(playlist=playlist).delete()
             for item in form.cleaned_data.get('items'):
-                print(item)
-                pitem, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=item)
-                pitem.save()
+                pi, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=item)
+                pi.save()
+
+        return JsonResponse({'status': 'ok'})
 
     items = serialize('json', playlist.items.all())
 

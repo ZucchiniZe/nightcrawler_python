@@ -8,7 +8,8 @@ var app = new Vue({
     description: window.data.description || '',
     issues: window.data.items || [],
     q: '',
-    searchResults: []
+    searchResults: [],
+    messages: []
   },
   watch: {
     'q': 'search'
@@ -21,6 +22,10 @@ var app = new Vue({
     }
   },
   methods: {
+    flash: function(type, text, timeout) {
+      this.messages.push({type: type, text: text})
+      setTimeout(function() {this.messages.pop()}.bind(this), timeout)
+    },
     search: function(term) {
       var search = term.trim();
       if (search !== "") {
@@ -63,6 +68,10 @@ var app = new Vue({
           title: this.title,
           description: this.description,
           items: this.ids
+        }
+      }).then(function(res) {
+        if (res.data.status == 'ok') {
+          this.flash('success', this.title + ' has been updated', 2000);
         }
       });
     }
