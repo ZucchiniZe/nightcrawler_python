@@ -54,9 +54,22 @@ def search_issues(request):
 def edit_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
     form = PlaylistForm(request.POST or None, instance=playlist)
+
     if form.is_valid():
+        clean_data = {
+            'title': form.cleaned_data.get('title'),
+            'description': form.cleaned_data.get('description'),
+            'creator': request.user,
+        }
+
+        playlist = Playlist(pk=playlist.pk, created_at= playlist.created_at, **clean_data)
+        playlist.save()
+
+        # playlist.items.all().delete()
         for item in request.POST.getlist('items'):
             pitem, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=Issue.objects.get(pk=item))
             pitem.save()
+
     items = serialize('json', playlist.items.all())
+
     return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'form': form, 'items': items})

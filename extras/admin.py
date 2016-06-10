@@ -25,3 +25,4 @@ class PlaylistAdmin(admin.ModelAdmin):
         return urls
 
 admin.site.register(Playlist, PlaylistAdmin)
+admin.site.register(PlaylistItem)
