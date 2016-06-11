@@ -6,6 +6,7 @@ var app = new Vue({
     title: window.data.title || '',
     description: window.data.description || '',
     issues: window.data.items || [],
+    creating: window.creating,
     iq: '',
     cq: '',
     searchResults: [],
@@ -26,6 +27,7 @@ var app = new Vue({
   methods: {
     flash: function(type, text, timeout) {
       this.flashMessages.push({type: type, text: text});
+
       setTimeout(function(){this.flashMessages.pop()}.bind(this), timeout)
     },
     searchIssues: function(term) {
@@ -35,7 +37,7 @@ var app = new Vue({
       this.search(term, 'comic')
     },
     search: function(term, type) {
-      // query /api/issue/search and get top 50 results
+      // query /api/issue/search and get top 10 results
       var search = term.trim();
       if (search !== "") {
         this.$http.get('/api/' + type + '/search/', {q: search}).then(function (response) {
@@ -46,7 +48,7 @@ var app = new Vue({
               element.title = element.text;
               delete element.text;
               return element
-            }) .slice(0, 10);
+            }).slice(0, 10);
           } else {
             this.searchResults = [];
           }
@@ -97,12 +99,18 @@ var app = new Vue({
         items: this.ids
       }).then(function(res) {
         if (res.data.success) {
-          this.flash('success', this.title + ' has been updated', 2000);
-          this.errors = null;
+          if (window.creating) {
+            this.flash('success', this.title + 'has been created redirecting now', 2000);
+            this.errors = null;
+            setTimeout(function() { window.location.replace('/playlist/' + res.data.id) }, 2000)
+          } else {
+            this.flash('success', this.title + ' has been updated', 2000);
+            this.errors = null;
+          }
         } else {
           this.flash('error', 'something went wrong, look below', 2000);
           this.errors = res.data.errors;
-          console.log(res.data.errors)
+          console.log(res.data)
         }
       });
     }

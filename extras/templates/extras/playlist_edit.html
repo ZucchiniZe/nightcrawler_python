@@ -23,7 +23,8 @@
         </li>
       </ul>
     </template>
-    <h1>Editing {{ title }}</h1>
+    <h1 v-if="creating">Creating new Playlist</h1>
+    <h1 v-else>Editing {{ title }}</h1>
     <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
       <fieldset>
         <div class="pure-control-group">
@@ -83,6 +84,7 @@
         return element.fields;
       })
     };
+    window.creating = {{ creating|yesno:"true,false" }}
   </script>
   <script src="{% static 'extras/cookie.js' %}"></script>
   <script src="{% static 'extras/vue.min.js' %}"></script>

@@ -115,3 +115,7 @@ li.issue a {
 .message a {
   color: rgb(125, 195, 238);
 }
+
+.pure-menu-link {
+  padding: .5em;
+}

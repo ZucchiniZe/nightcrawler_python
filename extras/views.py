@@ -65,11 +65,17 @@ def get_issues_comic(request, pk):
     return JsonResponse(issues, safe=False)
 
 
-def edit_playlist(request, pk):
-    playlist = Playlist.objects.get(pk=pk)
-    if request.user != playlist.creator:
-        messages.error(request, 'You are not permitted to edit this playlist')
-        return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
+def edit_playlist(request, pk=None):
+    if pk is None and not request.is_ajax():
+        return render(request, 'extras/playlist_edit.html', {'items': [], 'creating': True})
+
+    if pk is None:
+        playlist = Playlist()
+    else:
+        playlist = Playlist.objects.get(pk=pk)
+        if request.user != playlist.creator:
+            messages.error(request, 'You are not permitted to edit this playlist')
+            return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
 
     if request.is_ajax() and request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
@@ -92,7 +98,7 @@ def edit_playlist(request, pk):
                 if item.issue.id not in data.get('items'):
                     item.delete()
 
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'id': playlist.pk})
         else:
             return JsonResponse({
                 'success': False,
