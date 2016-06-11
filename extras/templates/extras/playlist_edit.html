@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load helpers %}
+
+{% block title %}Editing {{ playlist.title }}{% endblock %}
+
+{% block content %}
+  {% verbatim %}
+  <div id="playlist-app">
+    <div class="messages" v-if="flashMessages.length > 0">
+      <div v-for="message in flashMessages" class="message" :class="message.type">
+        {{{ message.text }}}
+      </div>
+    </div>
+    <template v-if="errors">
+      <h2>You had some errors while submitting</h2>
+      <ul>
+        <li v-for="error in errors">
+          {{ $key }}
+          <ul>
+            <li v-for="err in error">{{ err.message }}</li>
+          </ul>
+        </li>
+      </ul>
+    </template>
+    <h1 v-if="creating">Creating new Playlist</h1>
+    <h1 v-else>Editing {{ title }}</h1>
+    <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
+      <fieldset>
+        <div class="pure-control-group">
+          <label for="title">title: </label>
+          <input id="title" v-model="title" required>
+        </div>
+        <div class="pure-control-group">
+          <label for="desc">description: </label>
+          <textarea id="desc" rows="5" cols="40" v-model="description" required></textarea>
+        </div>
+        <div class="pure-control-group">
+          <label for="issue-searchsue">issues: </label>
+          <input id="issue-search" v-model="iq" debounce="500" placeholder="search for issues (use specific numbers)" size="35">
+        </div>
+        <div class="pure-control-group">
+          <label for="comic-searchsue">comics: </label>
+          <input id="comic-search" v-model="cq" debounce="500" placeholder="search for comics (adds all issues in order)" size="35">
+        </div>
+        <div class="pure-controls">
+          <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <h3>Issues in playlist (drag to re-order)</h3>
+        <ol v-droper="issues">
+          <li v-dragable v-for="issue in issues">
+            {{ issue.title }}
+            <a href="#" @click.prevent="removeIssue($index)">remove</a>
+          </li>
+        </ol>
+      </div>
+      <div class="pure-u-1-2" v-if="searchResults.length > 0">
+        <h3>Search results</h3>
+        <ul>
+          <li v-for="result in searchResults">
+            {{ result.title }}
+            <a href="#" @click.prevent="addResult(result)">add</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endverbatim %}
+{% endblock %}
+
+{% block script %}
+  <script>
+    window.data = {
+      title: '{{ playlist.title }}',
+      description: '{{ playlist.description }}',
+      items: {{ items|safe }}.map(function(element) {
+        var ids = {id: element.pk};
+        for (var attr in ids) { element.fields[attr] = ids[attr] }
+        return element.fields;
+      })
+    };
+    window.creating = {{ creating|yesno:"true,false" }}
+  </script>
+  <script src="{% static 'extras/cookie.js' %}"></script>
+  <script src="{% static 'extras/vue.min.js' %}"></script>
+  <script src="{% static 'extras/vue-deps.js' %}"></script>
+  <script src="{% static 'extras/playlist.js' %}"></script>
+{% endblock %}

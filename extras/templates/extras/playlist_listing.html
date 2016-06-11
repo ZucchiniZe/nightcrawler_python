@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}All Playlists{% endblock %}
+
+{% block content %}
+  <h1>All Playlists</h1>
+  <p>Playlists are user provided reading orders of marvel comics.</p>
+  {% if request.user.is_authenticated %}
+    <p>To create one click <a href="{% url 'extras:create_playlist' %}">here</a></p>
+  {% else %}
+    <p>To create one please <a href="{% url 'account_login' %}">login</a>.</p>
+  {% endif %}
+  <ul>
+    {% for playlist in object_list %}
+      <li><a href="{% url 'extras:playlist' playlist.id %}">{{ playlist.title }}</a> - {{ playlist.creator.username }}</li>
+    {% endfor %}
+  </ul>
+  {% include 'includes/pagination.html' %}
+{% endblock %}

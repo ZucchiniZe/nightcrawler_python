@@ -4,5 +4,7 @@ __pycache__/
 venv/
 .idea
 *.sqlite3
+.env
 .coverage
 .env
+.out

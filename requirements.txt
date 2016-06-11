@@ -28,3 +28,4 @@ six==1.10.0
 urllib3==1.15.1
 wcwidth==0.1.6
 whitenoise==3.2
+-e git+https://github.com/mverleg/django-ordered-model@again#egg=django-ordered-model
