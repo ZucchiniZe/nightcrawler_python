@@ -35,14 +35,7 @@
               <span class="read-status {{ issue|was_read_by:request.user|yesno }}">{{ issue|was_read_by:request.user|yesno:"✓,✗" }}</span>
             {% endif %}
             {{ issue.title }}
-            <a class="read-issue"
-               target="_blank"
-               href="{{ issue.link }}"
-               data-issueid="{{ issue.id }}"
-               data-comicid="{{ comic.id }}"
-               data-comic="{{ comic.title }}"
-               data-issue="{{ issue.title }}"
-               data-num="{{ issue.num }}">Read now</a>
+            {% include 'includes/issue.html' with issue=issue text="Read now" %}
           </div>
           {% if issue.creator_set.all %}
             <div class="issue-creators">

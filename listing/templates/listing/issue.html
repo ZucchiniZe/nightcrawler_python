@@ -11,12 +11,7 @@
       <li><a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a></li>
     {% endfor %}
   </ul>
-  <a class="read-issue"
-     target="_blank"
-     href="{{ issue.link }}"
-     data-comic="{{ comic.title }}"
-     data-issue="{{ issue.title }}"
-     data-num="{{ issue.num }}">Read now</a>
+  {% include 'includes/issue.html' with issue=issue text="Read now" %}
 {% endblock %}
 
 {% block script %}
