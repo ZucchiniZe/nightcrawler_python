@@ -58,7 +58,7 @@
 analytics.identify('{{ request.user.id }}', {
   name: '{{ request.user.username }}',
   email: '{{ request.user.email }}',
-  createdAt: '{{ request.user.date_joined }}'
+  createdAt: '{{ request.user.date_joined|date:"c" }}'
 })
 </script>
 {% endif %}
