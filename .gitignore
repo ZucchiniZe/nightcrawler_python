@@ -6,3 +6,4 @@ venv/
 *.sqlite3
 .env
 .coverage
+.out

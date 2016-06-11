@@ -37,7 +37,7 @@ class PlaylistItem(OrderedModel):
     order_with_respect_to = 'playlist'
 
     def __str__(self):
-        return "I{} P{}".format(self.issue.id, self.playlist.id)
+        return "I{} P{} O{}".format(self.issue.id, self.playlist.id, self.order)
 
-    class Meta(OrderedModel.Meta):
-        pass
+    class Meta:
+        ordering = ('playlist', 'order')

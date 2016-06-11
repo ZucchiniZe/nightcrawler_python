@@ -1,5 +1,4 @@
 Vue.http.headers.common['X-CSRFToken'] = Cookies.get('csrftoken');
-// Vue.http.options.emulateJSON = true;
 
 var app = new Vue({
   el: '#playlist-app',
@@ -23,8 +22,8 @@ var app = new Vue({
   },
   methods: {
     flash: function(type, text, timeout) {
-      this.messages.push({type: type, text: text})
-      setTimeout(function() {this.messages.pop()}.bind(this), timeout)
+      this.messages.push({type: type, text: text});
+      setTimeout(function(){this.messages.pop()}.bind(this), timeout)
     },
     search: function(term) {
       var search = term.trim();
@@ -66,8 +65,11 @@ var app = new Vue({
         description: this.description,
         items: this.ids
       }).then(function(res) {
-        if (res.data.status == 'ok') {
+        if (res.data.success) {
           this.flash('success', this.title + ' has been updated', 2000);
+        } else {
+          this.flash('error', 'something went wrong', 2000);
+          console.log(res.data.errors)
         }
       });
     }

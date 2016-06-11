@@ -66,13 +66,19 @@ def edit_playlist(request, pk):
             playlist = Playlist(pk=playlist.pk, created_at=playlist.created_at, **clean_data)
             playlist.save()
 
-            PlaylistItem.objects.filter(playlist=playlist).delete()
-            for item in form.cleaned_data.get('items'):
-                pi, created = PlaylistItem.objects.get_or_create(playlist=playlist, issue=item)
-                pi.save()
+            # use data for original order of ids, form.cleaned_data mucks up the order eliminating the purpose of this
+            for order, item in enumerate(data.get('items')):
+                pi, created = PlaylistItem.objects.update_or_create(playlist=playlist,
+                                                                    issue=item,
+                                                                    defaults={'order': order})
 
-        return JsonResponse({'status': 'ok'})
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': json.loads(form.errors.as_json())
+            })
 
-    items = serialize('json', playlist.items.all())
+    items = serialize('json', [x.issue for x in playlist.playlistitem_set.all()])
 
     return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'items': items})
