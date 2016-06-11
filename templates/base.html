@@ -54,7 +54,11 @@
 {% block script %}{% endblock %}
 {% if request.user.is_authenticated %}
 <script>
-analytics.identify('{{ request.user.id }}', { name: '{{ request.user.username }}', email: '{{ request.user.email }}'})
+analytics.identify('{{ request.user.id }}', {
+  name: '{{ request.user.username }}',
+  email: '{{ request.user.email }}',
+  createdAt: '{{ request.user.date_joined }}'
+})
 </script>
 {% endif %}
 </body>
