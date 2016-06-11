@@ -111,3 +111,7 @@ li.issue a {
   background-color: rgb(250, 191, 103);
   color: rgb(151, 96, 13);
 }
+
+.message a {
+  color: rgb(125, 195, 238);
+}

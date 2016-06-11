@@ -10,7 +10,7 @@ from django.contrib import messages
 from haystack.query import SearchQuerySet
 from haystack.inputs import Raw
 
-from listing.models import Issue
+from listing.models import Issue, Comic
 from .models import ReadIssue, Playlist, PlaylistItem
 from .forms import PlaylistForm
 
@@ -51,6 +51,18 @@ def search_issues(request):
     results = SearchQuerySet().filter(type='issue', content=Raw(request.GET.get('q', '')))
     data = list(map(lambda x: dict(id=int(x.pk), **x.get_stored_fields()), results))
     return JsonResponse(data, safe=False)
+
+
+def search_comics(request):
+    results = SearchQuerySet().filter(type='comic', content=Raw(request.GET.get('q', '')))
+    data = list(map(lambda x: dict(id=int(x.pk), **x.get_stored_fields()), results))
+    return JsonResponse(data, safe=False)
+
+
+def get_issues_comic(request, pk):
+    comic = Comic.objects.get(pk=pk)
+    issues = serialize('python', comic.issues.all())
+    return JsonResponse(issues, safe=False)
 
 
 def edit_playlist(request, pk):

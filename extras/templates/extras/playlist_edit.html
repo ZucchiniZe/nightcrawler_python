@@ -9,7 +9,7 @@
   <div id="playlist-app">
     <div class="messages" v-if="flashMessages.length > 0">
       <div v-for="message in flashMessages" class="message" :class="message.type">
-        {{ message.text }}
+        {{{ message.text }}}
       </div>
     </div>
     <template v-if="errors">
@@ -36,7 +36,11 @@
         </div>
         <div class="pure-control-group">
           <label for="issue-searchsue">issues: </label>
-          <input id="issue-search" v-model="q" debounce="250" placeholder="search for issues (use specific numbers)" size="30">
+          <input id="issue-search" v-model="iq" debounce="500" placeholder="search for issues (use specific numbers)" size="35">
+        </div>
+        <div class="pure-control-group">
+          <label for="comic-searchsue">comics: </label>
+          <input id="comic-search" v-model="cq" debounce="500" placeholder="search for comics (adds all issues in order)" size="35">
         </div>
         <div class="pure-controls">
           <button type="submit" class="pure-button pure-button-primary">Submit</button>
@@ -57,9 +61,9 @@
       <div class="pure-u-1-2" v-if="searchResults.length > 0">
         <h3>Search results</h3>
         <ul>
-          <li v-for="issue in searchResults">
-            {{ issue.title }}
-            <a href="#" @click.prevent="addIssue(issue)">add</a>
+          <li v-for="result in searchResults">
+            {{ result.title }}
+            <a href="#" @click.prevent="addResult(result)">add</a>
           </li>
         </ul>
       </div>
