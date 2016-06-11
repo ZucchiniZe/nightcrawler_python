@@ -110,3 +110,14 @@ def edit_playlist(request, pk=None):
     items = serialize('json', [x.issue for x in playlist.playlistitem_set.all()])
 
     return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'items': items})
+
+
+def delete_playlist(request, pk):
+    playlist = Playlist.objects.get(pk=pk)
+    if request.user != playlist.creator:
+        messages.error(request, 'You are not permitted to edit this playlist')
+        return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
+    else:
+        playlist.delete()
+        messages.success(request, 'Your playlist has been deleted.')
+        return HttpResponseRedirect(reverse('extras:playlists'))

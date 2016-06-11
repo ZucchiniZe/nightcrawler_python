@@ -3,7 +3,11 @@
 {% block title %}Playlist {{ object.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ object.title }} created by {{ object.creator.username }}</h1>
+  <h1>{{ object.title }} created by {{ object.creator.username }}
+  {% if object.creator == request.user %}[
+    <a href="{% url 'extras:playlist_edit' object.id %}">edit</a>
+    <a href="{% url 'extras:playlist_delete' object.id %}">delete</a>
+  ]{% endif %}</h1>
   <p>{{ object.description }}</p>
   <ol>
     {% for item in object.playlistitem_set.all %}
