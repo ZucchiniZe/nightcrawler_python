@@ -7,21 +7,32 @@
 {% block content %}
   {% verbatim %}
   <div id="playlist-app">
-    <div class="messages" v-if="messages.length > 0">
-      <div v-for="message in messages" class="message" :class="message.type">
+    <div class="messages" v-if="flashMessages.length > 0">
+      <div v-for="message in flashMessages" class="message" :class="message.type">
         {{ message.text }}
       </div>
     </div>
+    <template v-if="errors">
+      <h2>You had some errors while submitting</h2>
+      <ul>
+        <li v-for="error in errors">
+          {{ $key }}
+          <ul>
+            <li v-for="err in error">{{ err.message }}</li>
+          </ul>
+        </li>
+      </ul>
+    </template>
     <h1>Editing {{ title }}</h1>
     <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
       <fieldset>
         <div class="pure-control-group">
           <label for="title">title: </label>
-          <input id="title" v-model="title">
+          <input id="title" v-model="title" required>
         </div>
         <div class="pure-control-group">
           <label for="desc">description: </label>
-          <textarea id="desc" rows="5" cols="40" v-model="description"></textarea>
+          <textarea id="desc" rows="5" cols="40" v-model="description" required></textarea>
         </div>
         <div class="pure-control-group">
           <label for="issue-searchsue">issues: </label>
@@ -32,22 +43,27 @@
         </div>
       </fieldset>
     </form>
-    <ul>
-      <li v-for="issue in searchResults">
-        {{ issue.title }}
-        <a href="#" @click.prevent="addIssue(issue)">add</a>
-      </li>
-    </ul>
 
-    <template v-if="issues.length > 0">
-      <p>added issues (drag to re-order)</p>
-      <ul v-droper="issues">
-        <li v-dragable v-for="issue in issues">
-          {{ issue.title }}
-          <a href="#" @click.prevent="removeIssue($index)">remove</a>
-        </li>
-      </ul>
-    </template>
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <h3>Issues in playlist (drag to re-order)</h3>
+        <ol v-droper="issues">
+          <li v-dragable v-for="issue in issues">
+            {{ issue.title }}
+            <a href="#" @click.prevent="removeIssue($index)">remove</a>
+          </li>
+        </ol>
+      </div>
+      <div class="pure-u-1-2" v-if="searchResults.length > 0">
+        <h3>Search results</h3>
+        <ul>
+          <li v-for="issue in searchResults">
+            {{ issue.title }}
+            <a href="#" @click.prevent="addIssue(issue)">add</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
   {% endverbatim %}
 {% endblock %}

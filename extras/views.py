@@ -1,9 +1,11 @@
 import json
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views import generic
 from django.core.serializers import serialize
+from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from haystack.query import SearchQuerySet
 from haystack.inputs import Raw
@@ -53,6 +55,9 @@ def search_issues(request):
 
 def edit_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
+    if request.user != playlist.creator:
+        messages.error(request, 'You are not permitted to edit this playlist')
+        return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
 
     if request.is_ajax() and request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
@@ -69,16 +74,21 @@ def edit_playlist(request, pk):
             # use data for original order of ids, form.cleaned_data mucks up the order eliminating the purpose of this
             for order, item in enumerate(data.get('items')):
                 pi, created = PlaylistItem.objects.update_or_create(playlist=playlist,
-                                                                    issue=item,
+                                                                    issue=Issue.objects.get(pk=item),
                                                                     defaults={'order': order})
+            for item in PlaylistItem.objects.filter(playlist=playlist):
+                if item.issue.id not in data.get('items'):
+                    item.delete()
 
             return JsonResponse({'success': True})
         else:
             return JsonResponse({
                 'success': False,
+                # as_json returns json as string, jsonresponse takes a dict and returns json
                 'errors': json.loads(form.errors.as_json())
             })
 
+    # get by playlistitem otherwise the ordering doesn't kick in
     items = serialize('json', [x.issue for x in playlist.playlistitem_set.all()])
 
     return render(request, 'extras/playlist_edit.html', {'playlist': playlist, 'items': items})

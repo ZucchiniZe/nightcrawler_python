@@ -5,9 +5,9 @@
 {% block content %}
   <h1>{{ object.title }} created by {{ object.creator.username }}</h1>
   <p>{{ object.description }}</p>
-  <ul>
+  <ol>
     {% for item in object.playlistitem_set.all %}
       <li><a href="{% url 'listing:issue' item.issue.id %}">{{ item.issue.title }}</a></li>
     {% endfor %}
-  </ul>
+  </ol>
 {% endblock %}

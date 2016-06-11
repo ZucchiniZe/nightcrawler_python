@@ -1,5 +1,9 @@
-body {
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
   font-family: 'Roboto', sans-serif;
+}
+
+body {
   background-image: url('/static/listing/background.jpg');
 }
 
@@ -80,25 +84,30 @@ li.issue a {
 }
 
 .message {
-  padding: 10px;
-  margin-top: 10px;
-  color: white;
-  border-radius: 4px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin-top: 1em;
+  position: relative;
+  margin-bottom: 1em;
+  padding: 1em;
+  border-radius: 3px;
+  background: #ccc;
 }
 
 .message.success {
-  background: rgb(28, 184, 65);
+  background-color: rgb(83, 180, 79);
+  color: #fff;
 }
 
 .message.info {
-  background: rgb(66, 184, 221);
+  background-color: rgb(209, 235, 238);
+  color: rgb(102, 131, 145);
 }
 
 .message.error {
-  background: rgb(202, 60, 60);
+  background-color: #D13C38;
+  color: #fff;
 }
 
 .message.warning {
-  background: rgb(223, 117, 20);
+  background-color: rgb(250, 191, 103);
+  color: rgb(151, 96, 13);
 }

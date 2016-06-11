@@ -8,7 +8,8 @@ var app = new Vue({
     issues: window.data.items || [],
     q: '',
     searchResults: [],
-    messages: []
+    flashMessages: [],
+    errors: null
   },
   watch: {
     'q': 'search'
@@ -22,10 +23,11 @@ var app = new Vue({
   },
   methods: {
     flash: function(type, text, timeout) {
-      this.messages.push({type: type, text: text});
-      setTimeout(function(){this.messages.pop()}.bind(this), timeout)
+      this.flashMessages.push({type: type, text: text});
+      setTimeout(function(){this.flashMessages.pop()}.bind(this), timeout)
     },
     search: function(term) {
+      // query /api/issue/search and get top 50 results
       var search = term.trim();
       if (search !== "") {
         this.$http.get('/api/issue/search', {q: search}).then(function (response) {
@@ -36,7 +38,7 @@ var app = new Vue({
               element.title = element.text;
               delete element.text;
               return element
-            });
+            }) .slice(0, 10);
           } else {
             this.searchResults = [];
           }
@@ -67,8 +69,10 @@ var app = new Vue({
       }).then(function(res) {
         if (res.data.success) {
           this.flash('success', this.title + ' has been updated', 2000);
+          this.errors = null;
         } else {
-          this.flash('error', 'something went wrong', 2000);
+          this.flash('error', 'something went wrong, look below', 2000);
+          this.errors = res.data.errors;
           console.log(res.data.errors)
         }
       });
