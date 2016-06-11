@@ -31,6 +31,7 @@
           <li class="pure-menu-item {{ url|active_link:'listing:synced' }}"><a href="{% url 'listing:synced' %}" class="pure-menu-link">synced</a></li>
           <li class="pure-menu-item {{ url|active_link:'listing:creators' }}"><a href="{% url 'listing:creators' %}" class="pure-menu-link">creators</a></li>
           <li class="pure-menu-item {{ url|active_link:'listing:search' }}"><a href="{% url 'listing:search' %}" class="pure-menu-link">search</a></li>
+          <li class="pure-menu-item {{ url|active_link:'extras:playlists' }}"><a href="{% url 'extras:playlists' %}" class="pure-menu-link">playlists</a></li>
           {% if not request.user.is_authenticated %}
             <li class="pure-menu-item"><a href="{% url 'account_login' %}" class="pure-menu-link">login</a></li>
             <li class="pure-menu-item"><a href="{% url 'account_signup' %}" class="pure-menu-link">signup</a></li>
