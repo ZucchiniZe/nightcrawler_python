@@ -15,4 +15,4 @@ test:
     - python manage.py collectstatic --noinput
   post:
     - pip install codecov && codecov
-    - mv coverage $CIRCLE_ARTIFACTS
+    - mv cover $CIRCLE_ARTIFACTS
