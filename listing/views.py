@@ -67,7 +67,7 @@ class CreatorView(generic.DetailView):
 def refresh_comics(request):
     id = async(scrape_titles, hook=import_titles)
     id = humanize(id)
-    messages.info(request, 'Refreshing comics. Please refresh in a few seconds. id: %s' % id)
+    messages.info(request, 'Refreshing comics. Please refresh in a few seconds. id: {0!s}'.format(id))
     return HttpResponseRedirect(reverse('listing:listing'))
 
 
@@ -75,14 +75,14 @@ def refresh_issues(request, pk):
     comic = Comic.objects.get(pk=pk)
     id = async(scrape_issues, pk, comic, hook=import_issues)
     id = humanize(id)
-    messages.info(request, 'Refreshing issues for %s Please refresh in a few seconds. id: %s' % (comic.title, id))
+    messages.info(request, 'Refreshing issues for {0!s} Please refresh in a few seconds. id: {1!s}'.format(comic.title, id))
     return HttpResponseRedirect(reverse('listing:comic', args=(pk,)))
 
 
 def refresh_creators(request):
     id = async(scrape_creators, hook=import_creators)
     id = humanize(id)
-    messages.info(request, 'Refreshing creators. Please refresh in a few seconds. id: %s' % id)
+    messages.info(request, 'Refreshing creators. Please refresh in a few seconds. id: {0!s}'.format(id))
     return HttpResponseRedirect(reverse('listing:creators'))
 
 

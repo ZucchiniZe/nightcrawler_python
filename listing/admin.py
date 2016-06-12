@@ -17,7 +17,7 @@ class ComicAdmin(admin.ModelAdmin):
     def scrape_issues(self, request, queryset):
         for item in queryset:
             async(scrape_issues, item.pk, item, hook=import_issues)
-        self.message_user(request, '%d comics queued for scraping' % len(queryset))
+        self.message_user(request, '{0:d} comics queued for scraping'.format(len(queryset)))
     scrape_issues.short_description = 'Scrape selected comics'
 
 
@@ -26,7 +26,7 @@ class IssueAdmin(admin.ModelAdmin):
 
     def link_to_comic(self, obj):
         link=urlresolvers.reverse("admin:listing_comic_change", args=[obj.comic.id])
-        return u'<a href="%s">%s</a>' % (link,obj.comic.title)
+        return u'<a href="{0!s}">{1!s}</a>'.format(link, obj.comic.title)
     link_to_comic.allow_tags=True
 
 
