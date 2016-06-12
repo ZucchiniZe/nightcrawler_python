@@ -8,4 +8,6 @@ venv/
 .coverage
 .env
 .out
+
 nightcrawler/staticfiles/*
+cover/*

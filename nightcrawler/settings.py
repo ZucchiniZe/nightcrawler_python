@@ -208,4 +208,4 @@ if os.environ.get('TEST', False):
     logging.disable(logging.CRITICAL)
     TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-    NOSE_ARGS = ['--with-coverage', '--cover-package=listing,extras,nightcrawler']
+    NOSE_ARGS = ['--with-coverage', '--cover-package=listing,extras,nightcrawler', '--cover-html']
