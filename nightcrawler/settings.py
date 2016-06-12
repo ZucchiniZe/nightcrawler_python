@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import logging
 import dj_database_url
 from urllib.parse import urlparse
 
@@ -204,6 +205,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 # Django nose -- test runner with auto xunit output
 
 if os.environ.get('TEST', False):
+    logging.disable(logging.CRITICAL)
     TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
     NOSE_ARGS = ['--with-coverage', '--cover-package=listing,extras,nightcrawler']

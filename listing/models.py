@@ -79,7 +79,7 @@ class Creator(models.Model):
         return self.issues.count()
 
     def __str__(self):
-        return "{} {}".format(self.first, self.last)
+        return self.name
 
 
     def get_absolute_url(self):
