@@ -12,6 +12,6 @@ machine:
 
 test:
   pre:
-    - python manage.py collectstati --noinput
+    - python manage.py collectstatic --noinput
   post:
     - pip install codecov && codecov
