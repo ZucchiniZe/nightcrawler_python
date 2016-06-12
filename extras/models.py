@@ -7,10 +7,13 @@ from listing.models import Comic, Issue
 
 
 class ReadIssue(models.Model):
-    user = models.ForeignKey(User, related_name='read')
+    user = models.ForeignKey(User, related_name='reads')
     issue = models.ForeignKey(Issue, related_name='users')
-    count = models.IntegerField(default=0)
+    count = models.IntegerField(default=1)
     read_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "U{} I{} C{}".format(self.user.id, self.issue.id, self.count)
 
     class Meta:
         ordering = ['user']
