@@ -28,6 +28,21 @@ def read_issue(request, comic_id, issue_id):
     return HttpResponse('captured read event')
 
 
+def mark_all_issues_read(request, pk):
+    if not request.user.is_authenticated():
+        return HttpResponse('should be logged in for this to work, oh well')
+
+    comic = Comic.objects.get(pk=pk)
+
+    for issue in comic.issues.all():
+        read, created = ReadIssue.objects.get_or_create(issue=issue, user=request.user)
+        read.count += 1
+        read.save()
+
+    messages.success(request, 'marked all issues for ' + comic.title + ' as read')
+    return HttpResponseRedirect(reverse('listing:comic', args=(comic.id,)))
+
+
 def profile(request, pk):
     user = User.objects.get(pk=pk)
 
