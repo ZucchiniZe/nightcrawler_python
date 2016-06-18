@@ -1,5 +1,11 @@
 Vue.http.headers.common['X-CSRFToken'] = Cookies.get('csrftoken');
 
+function getRun(start, end) {
+  if (end === -1) return String(start);
+  if (end === 0) return start + ' - Present';
+  return start + ' - ' + end;
+}
+
 var app = new Vue({
   el: '#playlist-app',
   data: {
@@ -11,7 +17,8 @@ var app = new Vue({
     cq: '',
     searchResults: [],
     flashMessages: [],
-    errors: null
+    errors: null,
+    requestNumber: 0
   },
   watch: {
     'iq': 'searchIssues',
@@ -40,11 +47,18 @@ var app = new Vue({
       // query /api/issue/search and get top 10 results
       var search = term.trim();
       if (search !== "") {
+        var localRequestNumber = ++this.requestNumber;
         this.$http.get('/api/' + type + '/search/', {q: search}).then(function (response) {
           var data = response.data;
+          if (this.requestNumber !== localRequestNumber) {
+            console.log('stale request data');
+            return
+          }
           if (data.length > 0) {
             // elasticsearch returns text instead of title, lets change that
             this.searchResults = data.map(function (element) {
+              // and lets add the run if the result is a comic
+              element.run = element.type === 'comic' ? getRun(element.start, element.end) : false;
               element.title = element.text;
               delete element.text;
               return element
@@ -61,12 +75,12 @@ var app = new Vue({
       if (result.type === 'issue') {
         this.addIssue(result)
       } else if (result.type === 'comic') {
-        console.log('comic', result.id);
         this.$http.get('/api/comic/' + result.id + '/issues/').then(function(response) {
           if (response.data.length > 0) {
+            // if we have issues, lets add the id to them
             var issues = response.data.map(function(issue) {
-              var ids = {id: issue.pk};
-              for (var attr in ids) { issue.fields[attr] = ids[attr] }
+              var extras = {id: issue.pk};
+              for (var attr in extras) { issue.fields[attr] = extras[attr] }
               return issue.fields;
             });
             issues.map(function(issue) {

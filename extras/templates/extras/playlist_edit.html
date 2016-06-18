@@ -63,7 +63,7 @@
         <h3>Search results</h3>
         <ul>
           <li v-for="result in searchResults">
-            {{ result.title }}
+            {{ result.title }} <span v-if="result.run">({{ result.run }})</span>
             <a href="#" @click.prevent="addResult(result)">add</a>
           </li>
         </ul>
