@@ -114,10 +114,16 @@ def edit_playlist(request, pk=None):
 
 def delete_playlist(request, pk):
     playlist = Playlist.objects.get(pk=pk)
-    if request.user != playlist.creator:
-        messages.error(request, 'You are not permitted to edit this playlist')
-        return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
-    else:
-        playlist.delete()
-        messages.success(request, 'Your playlist has been deleted.')
-        return HttpResponseRedirect(reverse('extras:playlists'))
+    if request.method == 'POST':
+        if request.user != playlist.creator:
+            messages.error(request, 'You are not permitted to edit this playlist')
+            return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
+        else:
+            playlist.delete()
+            messages.success(request, 'Your playlist has been deleted.')
+            return HttpResponseRedirect(reverse('extras:playlists'))
+    elif request.method == 'GET':
+        if request.user != playlist.creator:
+            messages.error(request, 'You are not permitted to edit this playlist')
+            return HttpResponseRedirect(reverse('extras:playlist', args=(pk,)))
+        return render(request, 'extras/playlist_delete.html', {'playlist': playlist})

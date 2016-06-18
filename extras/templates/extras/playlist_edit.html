@@ -78,16 +78,20 @@
 
 {% block script %}
   <script>
-    window.data = {
-      id: {{ playlist.id }},
-      title: '{{ playlist.title }}',
-      description: '{{ playlist.description }}',
-      items: {{ items|safe }}.map(function(element) {
+    {% if playlist %}
+      window.data = {
+        id: {{ playlist.id }},
+        title: '{{ playlist.title }}',
+        description: '{{ playlist.description }}',
+        items: {{ items|safe }}.map(function(element) {
         var ids = {id: element.pk};
         for (var attr in ids) { element.fields[attr] = ids[attr] }
         return element.fields;
       })
-    };
+      };
+    {% else %}
+      window.data = {}
+    {% endif %}
     window.creating = {{ creating|yesno:"true,false" }}
   </script>
   <script src="{% static 'extras/cookie.js' %}"></script>

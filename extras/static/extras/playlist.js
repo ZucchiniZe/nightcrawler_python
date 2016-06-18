@@ -115,7 +115,7 @@ var app = new Vue({
       }).then(function(res) {
         if (res.data.success) {
           if (window.creating) {
-            this.flash('success', this.title + 'has been created redirecting now', 2000);
+            this.flash('success', this.title + ' has been created redirecting now', 2000);
             this.errors = null;
             setTimeout(function() { window.location.replace('/playlist/' + res.data.id) }, 2000)
           } else {
