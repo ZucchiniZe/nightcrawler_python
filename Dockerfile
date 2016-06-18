@@ -5,14 +5,11 @@ RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 
 # Copy just the requirements.txt to cache the build step in docker
-COPY requirements.txt /usr/src/app
+COPY ./requirements.txt /usr/src/app
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-#ENV REDIS_URL
-#ENV ELASTICSEARCH_URL
-#ENV DATABASE_URL
-
 EXPOSE 8000
-CMD ["python", "manage.py", "qcluster"]
+COPY ./docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
