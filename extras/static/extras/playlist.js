@@ -9,6 +9,7 @@ function getRun(start, end) {
 var app = new Vue({
   el: '#playlist-app',
   data: {
+    id: window.data.id || 0,
     title: window.data.title || '',
     description: window.data.description || '',
     issues: window.data.items || [],

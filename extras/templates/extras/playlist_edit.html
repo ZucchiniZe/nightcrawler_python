@@ -24,7 +24,10 @@
       </ul>
     </template>
     <h1 v-if="creating">Creating new Playlist</h1>
-    <h1 v-else>Editing {{ title }}</h1>
+    <template v-else>
+      <h1 style="margin-bottom: 5px;">Editing {{ title }}</h1>
+      <a href="/playlist/{{ id }}">View {{ title }}</a>
+    </template>
     <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
       <fieldset>
         <div class="pure-control-group">
@@ -76,6 +79,7 @@
 {% block script %}
   <script>
     window.data = {
+      id: {{ playlist.id }},
       title: '{{ playlist.title }}',
       description: '{{ playlist.description }}',
       items: {{ items|safe }}.map(function(element) {
