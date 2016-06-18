@@ -159,7 +159,7 @@ Q_CLUSTER = {
 
 # Haystack search settings
 
-search_url = os.environ.get('ELASTICSEARCH_URL') or 'http://127.0.0.1:9200/'
+search_url = os.environ.get('ELASTICSEARCH_URL') or 'http://127.0.0.1:9200'
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -209,3 +209,19 @@ if os.environ.get('TEST', False):
     TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
     NOSE_ARGS = ['--with-coverage', '--cover-package=listing,extras,nightcrawler', '--cover-html']
+
+
+# Docker compose for development
+
+if os.environ.get('DOCKER', False):
+    Q_CLUSTER['redis']['host'] = 'redis'
+
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
+    }
+
+    HAYSTACK_CONNECTIONS['default']['url'] = 'http://search:9200'
