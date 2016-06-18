@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 import logging
-import dj_database_url
-from urllib.parse import urlparse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,8 +90,11 @@ WSGI_APPLICATION = 'nightcrawler.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
@@ -141,15 +142,11 @@ STATIC_URL = '/static/'
 
 # Django Q settings
 
-redis_url = os.environ.get('REDIS_URL') or 'redis://localhost:6379'
-url = urlparse(redis_url)
-
 Q_CLUSTER = {
     'redis': {
-        'host': url.hostname,
-        'port': url.port,
+        'host': 'redis',
+        'port': 6379,
         'db': 0,
-        'password': url.password,
         'socket_timeout': None,
         'charset': 'utf-8',
         'errors': 'strict',
@@ -159,19 +156,13 @@ Q_CLUSTER = {
 
 # Haystack search settings
 
-search_url = os.environ.get('ELASTICSEARCH_URL') or 'http://127.0.0.1:9200/'
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': search_url,
+        'URL': 'http://search:9200/',
         'INDEX_NAME': 'nightcrawler',
     },
 }
-
-# Database from url for heroku
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
