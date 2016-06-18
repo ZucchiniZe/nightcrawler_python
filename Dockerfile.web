@@ -1,0 +1,18 @@
+FROM python:3
+
+# Put all the code in /usr/src/app
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+
+# Copy just the requirements.txt to cache the build step in docker
+COPY requirements.txt /usr/src/app
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /usr/src/app
+
+#ENV REDIS_URL
+#ENV ELASTICSEARCH_URL
+#ENV DATABASE_URL
+
+EXPOSE 8000
+CMD ["gunicorn", "nightcrawler.wsgi", "--log-file=-", "--bind=0.0.0.0:8000"]
