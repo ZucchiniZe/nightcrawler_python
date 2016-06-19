@@ -1,0 +1,25 @@
+{% load tracking %}
+
+<ul>
+  {% for issue in issues %}
+    <li class="issue">
+      <div class="issue-info">
+        {% if request.user.is_authenticated %}
+          <span class="read-status {{ issue|was_read_by:request.user|yesno }}">{{ issue|was_read_by:request.user|yesno:"✓,✗" }}</span>
+        {% endif %}
+        {{ issue.title }}
+        {% include 'includes/issue.html' with issue=issue text="Read now" %}
+      </div>
+      {% if issue.creators.all %}
+        <div class="issue-creators">
+          Creators:
+          {% for creator in issue.creators.all %}
+            <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>{% include 'includes/comma.html' %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="issue-creators">no creators on marvel.com</div>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

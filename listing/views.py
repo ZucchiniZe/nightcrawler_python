@@ -5,7 +5,9 @@ from django.views import generic
 from django.shortcuts import render
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from django.utils import timezone
 
+from datetime import timedelta
 from django_q.tasks import async
 from django_q.humanhash import humanize
 from haystack.query import SearchQuerySet
@@ -53,8 +55,10 @@ class AllCreatorView(generic.ListView):
 
 def comic_view(request, pk):
     comic = Comic.objects.get(pk=pk)
-    issues = Issue.objects.prefetch_related('creator_set').filter(comic=comic).order_by('num')
-    return render(request, 'listing/comic.html', {'comic': comic, 'issues': issues})
+    issues = Issue.objects.prefetch_related('creators').filter(comic=comic).order_by('num')
+
+    recent = (timezone.now() - comic.refreshed_at) > timedelta(seconds=20)
+    return render(request, 'listing/comic.html', {'comic': comic, 'issues': issues, 'recent': recent})
 
 
 class IssueView(generic.DetailView):

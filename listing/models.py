@@ -65,7 +65,7 @@ class Creator(models.Model):
     first = models.CharField(max_length=100)
     last = models.CharField(blank=True, max_length=100)
     url = models.URLField(default='http://marvel.com/comics/creators')
-    issues = models.ManyToManyField(Issue)
+    issues = models.ManyToManyField(Issue, related_name='creators')
 
     @property
     def name(self):
