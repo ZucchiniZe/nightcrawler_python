@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}Search{% endblock %}
 
@@ -12,28 +13,30 @@
   </form>
   {% if query %}
     <h3>Found {{ results.count }} Result{{ results.count|pluralize }}</h3>
-    <ul>
-    {% for result in results %}
-      {% if result.content_type == 'listing.comic' %}
-        <li>
-          <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }} ({{ result.object.run }})</a>
-        </li>
-      {% endif %}
-      {% if result.content_type == 'listing.issue' %}
-        <li>
-          <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
-        </li>
-      {% endif %}
-      {% if result.content_type == 'listing.creator' %}
-        <li>
-          <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-        </li>
-      {% endif %}
-    {% empty %}
-      <p>No results found</p>
-      <p>note: some superheroes have dashes in their names which can't be one name. spiderman should be spider-man or spider man</p>
-    {% endfor %}
+    {% cache 600 search-results query %}
+      <ul>
+        {% for result in results %}
+          {% if result.content_type == 'listing.comic' %}
+            <li>
+              <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }} ({{ result.object.run }})</a>
+            </li>
+          {% endif %}
+          {% if result.content_type == 'listing.issue' %}
+            <li>
+              <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+            </li>
+          {% endif %}
+          {% if result.content_type == 'listing.creator' %}
+            <li>
+              <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+            </li>
+          {% endif %}
+        {% empty %}
+          <p>No results found</p>
+          <p>note: some superheroes have dashes in their names which can't be one name. spiderman should be spider-man or spider man</p>
+        {% endfor %}
     </ul>
+    {% endcache %}
   {% else %}
     <p>Some search examples:</p>
     <ul>

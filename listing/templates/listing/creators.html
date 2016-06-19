@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}Listing all creators{% endblock %}
 
@@ -10,15 +11,17 @@
       <h2>There are no creators in the db, click <a href="{% url 'listing:refresh_creators' %}">here</a> to refresh them</h2>
     {% endif %}
   {% else %}
-    <ul class="titles">
-      {% for creator in query %}
-        <li>
-          <h2>
-            <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>
-          </h2>
-        </li>
-      {% endfor %}
-    </ul>
+    {% cache 600 creator-list page_obj.number %}
+      <ul class="titles">
+        {% for creator in query %}
+          <li>
+            <h2>
+              <a href="{% url 'listing:creator' creator.id %}">{{ creator.name }}</a>
+            </h2>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endcache %}
     {% include 'includes/pagination.html' %}
   {% endif %}
 {% endblock %}

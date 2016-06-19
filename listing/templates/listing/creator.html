@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}{{ creator.name }}{% endblock %}
 
@@ -7,15 +8,17 @@
   <p>This page only shows the currently synced issues, so data may not be fully accurate.</p>
   <div class="creator-info"><a href="{{ creator.url }}">{{ creator.name }} on marvel.com</a></div>
   {% regroup creator.issues.all|dictsort:"comic.title" by comic as comics %}
-  <ul>
-    {% for comic in comics %}
-      <li><a href="{% url 'listing:comic' comic.grouper.id %}">{{ comic.grouper.title }} ({{ comic.grouper.run }})</a>
-        <ul>
-          {% for issue in comic.list %}
-            <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a></li>
-          {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
+  {% cache 600 creator-issue-list creator %}
+    <ul>
+      {% for comic in comics %}
+        <li><a href="{% url 'listing:comic' comic.grouper.id %}">{{ comic.grouper.title }} ({{ comic.grouper.run }})</a>
+          <ul>
+            {% for issue in comic.list %}
+              <li><a href="{% url 'listing:issue' issue.id %}">{{ issue.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endcache %}
 {% endblock %}
