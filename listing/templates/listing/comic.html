@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load humanize %}
 {% load tracking %}
+{% load cache %}
 
 {% block title %}Showing issues for {{ comic.title }}{% endblock %}
 
@@ -21,15 +22,16 @@
         <a href="{% url 'extras:mark_all_issues_read' comic.id %}">here</a> to mark all issues as read.</small>
     {% endif %}
   </div>
-  {% if comic.issues.all|length_is:"0" %}
+  {% if issues|length_is:"0" %}
     {% if comic.scraped %}
       <p>{{ comic.title }} has been scraped but hasn't returned any results, this likely means that there aren't any marvel unlimited issues available.</p>
     {% else %}
       <h3>Please click the refresh button above to scrape the marvel.com website</h3>
     {% endif %}
   {% else %}
+    {% cache 7200 issue-list comic %}
     <ul>
-      {% for issue in comic.issues.all %}
+      {% for issue in issues %}
         <li class="issue">
           <div class="issue-info">
             {% if request.user.is_authenticated %}
@@ -51,6 +53,7 @@
         </li>
       {% endfor %}
     </ul>
+    {% endcache %}
   {% endif %}
 {% endblock %}
 

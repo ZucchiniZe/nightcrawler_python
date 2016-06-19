@@ -38,7 +38,7 @@ def scrape_issues(data, comic):
             data['id'] = None
 
         if '#' in data['title']:
-            rx = re.match('^.*#(\d+)$', data['title'])
+            rx = re.match('^.*#(\d*.\d*)$', data['title'])
             if rx:
                 data['num'] = float(rx.groups()[0])
         else:

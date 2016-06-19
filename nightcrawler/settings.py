@@ -157,6 +157,19 @@ Q_CLUSTER = {
     }
 }
 
+# Cache settings using redis connection from above
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': [redis_url],
+        'OPTIONS': {
+            'DB': 1,
+        }
+
+    }
+}
+
 # Haystack search settings
 
 search_url = os.environ.get('ELASTICSEARCH_URL') or 'http://127.0.0.1:9200'
