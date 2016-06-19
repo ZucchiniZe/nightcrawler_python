@@ -6,10 +6,13 @@ defusedxml==0.4.1
 dj-database-url==0.4.1
 Django==1.9.6
 django-allauth==0.25.2
+django-debug-toolbar==1.4
 django-haystack==2.5.dev1
 django-nose==1.4.3
+-e git+https://github.com/mverleg/django-ordered-model@3eb559d428de9d07aad3e669fa3c8a45510f89ba#egg=django_ordered_model
 django-picklefield==0.3.2
 django-q==0.7.17
+django-redis-cache==1.6.5
 elasticsearch==2.3.0
 future==0.15.2
 gunicorn==19.6.0
@@ -25,7 +28,7 @@ redis==2.10.5
 requests==2.10.0
 requests-oauthlib==0.6.1
 six==1.10.0
+sqlparse==0.1.19
 urllib3==1.15.1
 wcwidth==0.1.6
 whitenoise==3.2
--e git+https://github.com/mverleg/django-ordered-model@again#egg=django-ordered-model
