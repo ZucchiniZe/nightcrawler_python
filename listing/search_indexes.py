@@ -16,7 +16,7 @@ class ComicIndex(indexes.SearchIndex, indexes.Indexable):
 
 class IssueIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, model_attr='title')
-    num = indexes.IntegerField(model_attr='num')
+    num = indexes.IntegerField(model_attr='num', null=True)
     type = indexes.CharField(default='issue')
 
     def get_model(self):
