@@ -93,5 +93,6 @@ class Creator(models.Model):
 @receiver(post_save, sender=Creator)
 @receiver(post_save, sender=Comic)
 @receiver(post_save, sender=Issue)
-def object_changed(sender, instance, **kwargs):
-    async(index_object, sender, instance, save=False)
+def object_changed(sender, instance, created, **kwargs):
+    if created:
+        async(index_object, sender, instance, save=False)

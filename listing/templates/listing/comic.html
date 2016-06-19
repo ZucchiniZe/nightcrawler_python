@@ -28,14 +28,7 @@
       <h3>Please click the refresh button above to scrape the marvel.com website</h3>
     {% endif %}
   {% else %}
-    {% if not recent %}
-      {% include 'includes/issue-list.html' with issues=issues %}
-    {% else %}
-      {# Cache this for two hours #}
-      {% cache 7200 issue-list comic %}
-        {% include 'includes/issue-list.html' with issues=issues %}
-      {% endcache %}
-    {% endif %}
+    {% include 'includes/issue-list.html' with issues=issues %}
   {% endif %}
 {% endblock %}
 

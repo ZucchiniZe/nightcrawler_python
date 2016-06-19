@@ -56,9 +56,7 @@ class AllCreatorView(generic.ListView):
 def comic_view(request, pk):
     comic = Comic.objects.get(pk=pk)
     issues = Issue.objects.prefetch_related('creators').filter(comic=comic).order_by('num')
-
-    recent = (timezone.now() - comic.refreshed_at) > timedelta(seconds=20)
-    return render(request, 'listing/comic.html', {'comic': comic, 'issues': issues, 'recent': recent})
+    return render(request, 'listing/comic.html', {'comic': comic, 'issues': issues})
 
 
 class IssueView(generic.DetailView):
@@ -83,9 +81,6 @@ def refresh_issues(request, pk):
     id = async(scrape_issues, pk, comic, hook=import_issues)
     id = humanize(id)
     messages.info(request, 'Refreshing issues for {0!s} Please refresh in a few seconds. id: {1!s}'.format(comic.title, id))
-    # delete the cached value for the list
-    cache_fragment = make_template_fragment_key('issue-list', [comic])
-    cache.delete(cache_fragment)
     return HttpResponseRedirect(reverse('listing:comic', args=(pk,)))
 
 
