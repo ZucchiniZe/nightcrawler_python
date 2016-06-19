@@ -1,6 +1,7 @@
 import json
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views import generic
 from django.core.serializers import serialize
@@ -17,6 +18,7 @@ from .forms import PlaylistForm
 
 def read_issue(request, comic_id, issue_id):
     if not request.user.is_authenticated():
+        return HttpResponse('should be logged in for this to work, oh well')
         return HttpResponse('should be logged in for this to work, oh well')
 
     issue = Issue.objects.get(pk=issue_id)
@@ -80,6 +82,7 @@ def get_issues_comic(request, pk):
     return JsonResponse(issues, safe=False)
 
 
+@login_required
 def edit_playlist(request, pk=None):
     if pk is None and not request.is_ajax():
         return render(request, 'extras/playlist_edit.html', {'items': [], 'creating': True})

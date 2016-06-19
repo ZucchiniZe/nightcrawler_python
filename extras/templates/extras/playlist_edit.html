@@ -2,7 +2,16 @@
 {% load staticfiles %}
 {% load helpers %}
 
-{% block title %}Editing {{ playlist.title }}{% endblock %}
+{% block title %}
+  {% spaceless %}
+    {% if creating %}
+     Creating new playlist
+    {% else %}
+      Editing {{ playlist.title }}
+    {% endif %}
+  {% endspaceless %}
+{% endblock %}
+
 
 {% block content %}
   {% verbatim %}
@@ -26,17 +35,17 @@
     <h1 v-if="creating">Creating new Playlist</h1>
     <template v-else>
       <h1 style="margin-bottom: 5px;">Editing {{ title }}</h1>
-      <a href="/playlist/{{ id }}">View {{ title }}</a>
+      <a href="/playlist/{{ id }}">View {{ title }}</a> (unsaved changes will be lost)
     </template>
     <form @submit.prevent="sendForm" class="pure-form pure-form-aligned">
       <fieldset>
         <div class="pure-control-group">
-          <label for="title">title: </label>
+          <label for="title">title:<sup v-if="creating" style="color:#ad3333" title="required">*</sup> </label>
           <input id="title" v-model="title" required>
         </div>
         <div class="pure-control-group">
           <label for="desc">description: </label>
-          <textarea id="desc" rows="5" cols="40" v-model="description" required></textarea>
+          <textarea id="desc" rows="5" cols="40" v-model="description" placeholder="(optional)"></textarea>
         </div>
         <div class="pure-control-group">
           <label for="issue-searchsue">issues: </label>
@@ -47,15 +56,17 @@
           <input id="comic-search" v-model="cq" debounce="500" placeholder="search for comics (adds all issues in order)" size="35">
         </div>
         <div class="pure-controls">
-          <button type="submit" class="pure-button pure-button-primary">Submit</button>
+          <button v-if="creating" type="submit" class="pure-button pure-button-primary">Create</button>
+          <button v-else type="submit" class="pure-button pure-button-primary">Save</button>
         </div>
       </fieldset>
     </form>
 
     <div class="pure-g">
       <div class="pure-u-1-2">
-        <h3>Issues in playlist (drag to re-order)</h3>
-        <ol v-droper="issues">
+        <h3>Issues in playlist (drag to re-order) <sup v-if="creating" style="color:#ad3333" title="required">*</sup></h3>
+        <p v-if="issues.length <= 0">Please add some issues</p>
+        <ol v-else v-droper="issues">
           <li v-dragable v-for="issue in issues">
             {{ issue.title }}
             <a href="#" @click.prevent="removeIssue($index)">remove</a>
@@ -84,13 +95,13 @@
         title: '{{ playlist.title }}',
         description: '{{ playlist.description }}',
         items: {{ items|safe }}.map(function(element) {
-        var ids = {id: element.pk};
-        for (var attr in ids) { element.fields[attr] = ids[attr] }
-        return element.fields;
-      })
-      };
+          var ids = {id: element.pk};
+          for (var attr in ids) { element.fields[attr] = ids[attr] }
+          return element.fields;
+        })
+      }
     {% else %}
-      window.data = {}
+      window.data = {};
     {% endif %}
     window.creating = {{ creating|yesno:"true,false" }}
   </script>

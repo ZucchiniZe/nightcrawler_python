@@ -119,7 +119,7 @@ var app = new Vue({
             this.errors = null;
             setTimeout(function() { window.location.replace('/playlist/' + res.data.id) }, 2000)
           } else {
-            this.flash('success', this.title + ' has been updated', 2000);
+            this.flash('success', this.title + ' has been saved', 2000);
             this.errors = null;
           }
         } else {

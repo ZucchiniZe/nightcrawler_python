@@ -195,6 +195,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
+LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = 'listing:index'
 
 ACCOUNT_EMAIL_REQUIRED = True
