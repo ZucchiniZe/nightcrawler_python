@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from haystack.query import SearchQuerySet
 
@@ -46,7 +46,7 @@ class AllCreatorView(generic.ListView):
 
 
 def comic_view(request, pk):
-    comic = Comic.objects.get(pk=pk)
+    comic = get_object_or_404(Comic, pk=pk)
     issues = Issue.objects.prefetch_related('creators').filter(comic=comic).order_by('num')
     return render(request, 'listing/comic.html', {'comic': comic, 'issues': issues})
 

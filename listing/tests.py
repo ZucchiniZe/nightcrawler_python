@@ -64,6 +64,10 @@ class ComicTest(TestCase):
         self.assertEqual(tumber.context['comic'], self.tumber)
         self.assertEqual(everest.context['comic'], self.everest)
 
+    def test_individial_nonexistant_comic_page(self):
+        resp = self.client.get(reverse('listing:comic', args=(10,)))
+        self.assertEqual(resp.status_code, 404)
+
 
 class IssueTest(TestCase):
     def setUp(self):
@@ -116,6 +120,10 @@ class CreatorTest(TestCase):
         self.assertEqual(stan.status_code, 200)
         self.assertEqual(creator.context['creator'], self.creator)
         self.assertEqual(stan.context['creator'], self.other_creator)
+
+    def test_individual_nonexistant_creator_view(self):
+        resp = self.client.get(reverse('listing:creator', args=(10,)))
+        self.assertEqual(resp.status_code, 404)
 
 
 class TaskTest(TestCase):
