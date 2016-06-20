@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import logging
 import dj_database_url
-from urllib.parse import urlparse
+import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,13 +37,14 @@ INSTALLED_APPS = [
     'listing',
     'extras',
     'haystack',
-    'django_q',
+    'django_rq',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'django.contrib.sites',
     'opbeat.contrib.django',
+    'raven.contrib.django.raven_compat',
     'django_nose',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -139,25 +140,10 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
-# Django Q settings
-
-redis_url = os.environ.get('REDIS_URL') or 'redis://localhost:6379'
-url = urlparse(redis_url)
-
-Q_CLUSTER = {
-    'redis': {
-        'host': url.hostname,
-        'port': url.port,
-        'db': 0,
-        'password': url.password,
-        'socket_timeout': None,
-        'charset': 'utf-8',
-        'errors': 'strict',
-        'unix_socket_path': None,
-    }
-}
 
 # Cache settings using redis connection from above
+
+redis_url = os.environ.get('REDIS_URL') or 'redis://localhost:6379'
 
 CACHES = {
     'default': {
@@ -215,6 +201,32 @@ ACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# Raven config for sentry
+
+RAVEN_CONFIG = {
+    'dsn': 'https://8106a6ea630446b3953cb5add1aeccfe:d619b25da560486a8e62e7902d7030e4@app.getsentry.com/83396',
+    'release': raven.fetch_git_sha(BASE_DIR),
+}
+
+# Django rq config for jobs
+
+RQ_QUEUES = {
+    'default': {
+        'URL': redis_url,
+        'DB': 0
+    },
+    'high': {
+        'URL': redis_url,
+        'DB': 0
+    },
+    'low': {
+        'URL': redis_url,
+        'DB': 0
+    }
+}
+
+RQ_SHOW_ADMIN_LINK = True
 
 # Django nose -- test runner with auto xunit output
 

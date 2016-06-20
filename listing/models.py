@@ -1,9 +1,6 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django_q.tasks import async
 
-from .tasks import get_url, index_object
+from .helpers import get_url
 
 
 class Comic(models.Model):
@@ -88,11 +85,3 @@ class Creator(models.Model):
 
     class Meta:
         ordering = ['first']
-
-
-@receiver(post_save, sender=Creator)
-@receiver(post_save, sender=Comic)
-@receiver(post_save, sender=Issue)
-def object_changed(sender, instance, created, **kwargs):
-    if created:
-        async(index_object, sender, instance, save=False)

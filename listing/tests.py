@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 
 from extras.models import ReadIssue
 from .models import Comic, Issue, Creator
-from .tasks import get_url
+from .helpers import get_url
 
 
 class ComicTest(TestCase):

@@ -1,19 +1,20 @@
-from lxml import html, etree
+from django_rq import job
+
 import re
 import requests
+import uuid
+import analytics
+from lxml import html, etree
+from datetime import datetime
 
 from haystack import connection_router, connections
+from .models import Comic, Issue, Creator
+from .helpers import get_url, parse_name, parse_title
+
+analytics.write_key = '3jPlLTLsajh0UoIfYq3L95EdiErVaZ57'
 
 
-def get_url(id, title='title', all=True):
-    if all:
-        url = "http://marvel.com/comics/series/{id}/{title}?offset=0&orderBy=release_date+asc&byId={id}&totalcount=10000"
-    else:
-        url = "http://marvel.com/comics/series/{id}/{title}"
-    url = url.format(id=id, title=title)
-    return url
-
-
+@job('high')
 def scrape_issues(data, comic):
     url = get_url(data)
 
@@ -48,29 +49,37 @@ def scrape_issues(data, comic):
             dicts.append(data)
 
         data['creators'] = []
-        for container in [etree.tostring(row) for row in tree.xpath('//p[@class="meta-creators"]/a')]:
-            tree = html.fromstring(container)
+        for creator_container in [etree.tostring(row) for row in tree.xpath('//p[@class="meta-creators"]/a')]:
+            tree = html.fromstring(creator_container)
 
             creator = dict(name=tree.xpath('//text()')[0].strip(), id=tree.xpath('//@href')[0].split('/')[-2])
 
             data['creators'].append(creator)
 
-    return dicts, comic
+    # code for saving the results
+    for result in dicts:
+        creators = result.pop('creators')
+        issue = Issue(comic=comic, **result)
+        issue.save()
 
-def parse_title(name):
-    rx = re.search(r'(.*) \((\d{4})(?: -? (\d{4}|Present))?\)', name)
-    if rx:
-        parsed = rx.groups()
-        if parsed[-1] is None:
-            years = (parsed[1], -1)
-        else:
-            years = (parsed[1], (0 if parsed[2] == 'Present' else parsed[2]))
+        for creator in creators:
+            del creator['name']
+            c, created = Creator.objects.get_or_create(**creator)
+            c.issues.add(issue)
+            c.save()
 
-        years = tuple(int(y) for y in years)
+    analytics.track(str(uuid.uuid4()), 'Refresh Issues', {
+        'series': comic.title,
+        'timestamp': datetime.now()
+    })
+    comic.scraped = True
+    comic.save()
 
-        return (parsed[0], years)
+    return 'Scraped and imported {} issues for {}'.format(len(dicts), comic.title)
 
-def scrape_titles():
+
+@job('high')
+def scrape_comics():
     url = "http://marvel.com/comics/series"
 
     page = requests.get(url)
@@ -86,17 +95,18 @@ def scrape_titles():
 
     dicts = [{'title': cur[0], 'start': cur[1][0], 'end': cur[1][1], 'id': cur[2], 'scraped': False} for cur in both]
 
-    return dicts
+    for result in dicts:
+        comic = Comic(**result)
+        comic.save()
+
+    analytics.track(str(uuid.uuid4()), 'Refresh Titles', {
+        'timestamp': datetime.now()
+    })
+
+    return 'Scraped and imported {} comics'.format(len(dicts))
 
 
-def parse_name(name):
-    if ',' in name:
-        split = [str.strip() for str in name.split(',')]
-        # return ' '.join([split[-1], split[0]])
-        return [split[-1], split[0]]
-    else:
-        return [name]
-
+@job('high')
 def scrape_creators():
     url = "http://marvel.com/comics/creators"
 
@@ -115,9 +125,18 @@ def scrape_creators():
         else:
             dicts.append({'first': cur[0][0], 'last': '', 'url': cur[1], 'id': cur[2]})
 
-    return dicts
+    for result in dicts:
+        creator = Creator(**result)
+        creator.save()
+
+    analytics.track(str(uuid.uuid4()), 'Refresh Creators', {
+        'timestamp': datetime.now()
+    })
+
+    return 'Scraped and imported {} creators'.format(len(dicts))
 
 
+@job('low')
 def index_object(sender, instance):
     backends = connection_router.for_write(instance=instance)
 

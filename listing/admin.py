@@ -1,11 +1,8 @@
 from django.contrib import admin
 from django.core import urlresolvers
 
-from django_q.tasks import async
-
 from .models import Comic, Issue, Creator
-from .tasks import scrape_issues
-from .hooks import import_issues
+from .jobs import scrape_issues
 
 
 class ComicAdmin(admin.ModelAdmin):
@@ -16,7 +13,7 @@ class ComicAdmin(admin.ModelAdmin):
 
     def scrape_issues(self, request, queryset):
         for item in queryset:
-            async(scrape_issues, item.pk, item, hook=import_issues)
+            scrape_issues.delay(item.pk, item)
         self.message_user(request, '{0:d} comics queued for scraping'.format(len(queryset)))
     scrape_issues.short_description = 'Scrape selected comics'
 
