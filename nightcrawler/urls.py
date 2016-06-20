@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'', include('listing.urls', namespace='listing')),
     url(r'', include('extras.urls', namespace='extras')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^queue/', include('django_rq.urls')),
     url(r'^admin/', admin.site.urls),
 ]
