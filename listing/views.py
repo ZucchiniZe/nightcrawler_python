@@ -3,11 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
-from django.core.cache import cache
-from django.core.cache.utils import make_template_fragment_key
-from django.utils import timezone
 
-from datetime import timedelta
 from haystack.query import SearchQuerySet
 
 from .models import Comic, Issue, Creator
