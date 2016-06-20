@@ -206,7 +206,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 RAVEN_CONFIG = {
     'dsn': 'https://8106a6ea630446b3953cb5add1aeccfe:d619b25da560486a8e62e7902d7030e4@app.getsentry.com/83396',
-    'release': raven.fetch_git_sha(BASE_DIR),
 }
 
 # Django rq config for jobs
