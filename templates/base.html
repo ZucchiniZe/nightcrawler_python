@@ -52,6 +52,8 @@
   {% endif %}
   {% block content %}{% endblock %}
 </div>
+<script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
+<script>Raven.config('https://ab6e0e325ab94454b6f322f8cd7e57c6@app.getsentry.com/83490').install()</script>
 {% block script %}{% endblock %}
 {% if request.user.is_authenticated %}
 <script>
@@ -59,6 +61,11 @@ analytics.identify('{{ request.user.id }}', {
   name: '{{ request.user.username }}',
   email: '{{ request.user.email }}',
   createdAt: '{{ request.user.date_joined|date:"c" }}'
+ })
+Raven.setUserContext({
+  name: '{{ request.user.username }}',
+  email: '{{ request.user.email }}',
+  id: '{{ request.user.id }}'
 })
 </script>
 {% endif %}
