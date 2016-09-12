@@ -150,7 +150,7 @@ CACHES = {
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': [redis_url],
         'OPTIONS': {
-            'DB': 1,
+            'DB': 0,
         }
 
     }
