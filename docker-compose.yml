@@ -21,4 +21,4 @@ services:
   db:
     image: postgres
   search:
-    image: elasticsearch
+    image: elasticsearch:2.4-alpine

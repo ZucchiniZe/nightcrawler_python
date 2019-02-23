@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import logging
 import dj_database_url
-import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,8 +42,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'django.contrib.sites',
-    'opbeat.contrib.django',
-    'raven.contrib.django.raven_compat',
     'django_nose',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,7 +53,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -177,14 +173,6 @@ DATABASES['default'].update(db_from_env)
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-# Opbeat stat tracking
-
-OPBEAT = {
-    'ORGANIZATION_ID': 'e4a92e8bae9a4cd9b82ad1ccb4f09f83',
-    'APP_ID': '10c2a61210',
-    'SECRET_TOKEN': 'fb88ac5a782f33e09260b785b650cfff98df5c1f',
-}
-
 # Django allauth -- easier account with social support
 
 AUTHENTICATION_BACKENDS = (
@@ -201,12 +189,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-
-# Raven config for sentry
-
-RAVEN_CONFIG = {
-    'dsn': 'https://8106a6ea630446b3953cb5add1aeccfe:d619b25da560486a8e62e7902d7030e4@app.getsentry.com/83396',
-}
 
 # Django rq config for jobs
 
@@ -239,7 +221,23 @@ if os.environ.get('TEST', False):
 # Docker compose for development
 
 if os.environ.get('DOCKER', False):
-    Q_CLUSTER['redis']['host'] = 'redis'
+    redis_url = 'redis://redis:6379'
+
+    CACHES['default']['LOCATION'] = [redis_url]
+    RQ_QUEUES = {
+        'default': {
+            'URL': redis_url,
+            'DB': 0
+        },
+        'high': {
+            'URL': redis_url,
+            'DB': 0
+        },
+        'low': {
+            'URL': redis_url,
+            'DB': 0
+        }
+    }
 
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -249,4 +247,4 @@ if os.environ.get('DOCKER', False):
         'PORT': 5432,
     }
 
-    HAYSTACK_CONNECTIONS['default']['url'] = 'http://search:9200'
+    HAYSTACK_CONNECTIONS['default']['URL'] = 'http://search:9200'

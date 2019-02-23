@@ -13,5 +13,5 @@ fi
 
 if [ "$1" != "" ] && [ "$1" == "worker" ]; then
   echo "-----> Running worker"
-  exec python manage.py qcluster
+  exec python manage.py rqworker high default low
 fi
