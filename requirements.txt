@@ -4,7 +4,7 @@ contextlib2==0.5.3
 coverage==4.1
 defusedxml==0.4.1
 dj-database-url==0.4.1
-Django==1.9.6
+Django==1.11.28
 django-allauth==0.25.2
 django-haystack==2.5.dev1
 django-nose==1.4.3
